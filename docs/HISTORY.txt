@@ -1,8 +1,12 @@
 Changelog
 =========
 
-1.0a1 - Unreleased
+1.0a2 - Unreleased
 ------------------
+
+
+1.0a1 - Released May 7, 2009
+----------------------------
 
 * Initial release as factored out from `plone.folder`.
   [witsch]
