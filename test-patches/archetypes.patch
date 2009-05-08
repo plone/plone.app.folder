@@ -13,29 +13,6 @@ Index extras/Products.Archetypes/Products/Archetypes/BaseBTreeFolder.py
      """ A BaseBTreeFolder with all the bells and whistles"""
  
      security = ClassSecurityInfo()
-Index extras/Products.Archetypes/Products/Archetypes/BaseObject.py
-===================================================================
---- extras/Products.Archetypes/Products/Archetypes/BaseObject.py
-+++ extras/Products.Archetypes/Products/Archetypes/BaseObject.py
-@@ -39,6 +39,7 @@ from AccessControl.Permissions import copy_or_move as permission_copy_or_move
- from Acquisition import aq_base
- from Acquisition import aq_inner
- from Acquisition import aq_parent
-+from Acquisition import aq_get
- from Acquisition import ImplicitAcquisitionWrapper
- from Acquisition import ExplicitAcquisitionWrapper
- from Acquisition import Explicit
-@@ -415,8 +416,8 @@ class BaseObject(Referenceable):
- 
-         if key not in keys and not key.startswith('_'):
-             # XXX Fix this in AT 1.4
--            value= getattr(aq_inner(self).aq_explicit, key, _marker) or \
--                   getattr(aq_parent(aq_inner(self)).aq_explicit, key, _marker)
-+            value= aq_get(aq_inner(self), key, _marker) or \
-+                   aq_get(aq_parent(aq_inner(self)), key, _marker)
-             if value is _marker:
-                 raise KeyError, key
-             else:
 Index extras/Products.Archetypes/Products/Archetypes/tests/reindex_sanity_plone21.txt
 ===================================================================
 --- extras/Products.Archetypes/Products/Archetypes/tests/reindex_sanity_plone21.txt
