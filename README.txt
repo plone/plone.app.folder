@@ -19,3 +19,14 @@ The package only contains the integration layer for the base class provided
 by `plone.folder`_, however.  Please see there for more detailed information.
 
   .. _`plone.folder`: http://pypi.python.org/pypi/plone.folder/
+
+Caveats
+-------
+
+If you are using `plone.app.folder` in your product you may notice that
+PloneTestCase will fail to setup a Plone site for your functional tests.
+This can be resolved by adding this line to your functional test source::
+
+    from plone.app.folder.tests import bbb
+
+
