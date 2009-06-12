@@ -4,6 +4,7 @@
     i18n_domain="plone.app.folder">
 
     <five:registerPackage package="." initialize=".initialize" />
+    <five:deprecatedManageAddDelete class=".folder.ATFolder" />
 
     <include file="profiles.zcml" />
     <include package="plone.folder" />
