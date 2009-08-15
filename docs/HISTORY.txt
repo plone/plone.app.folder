@@ -4,9 +4,6 @@ Changelog
 1.0a2 - Unreleased
 ------------------
 
-* Silence the manage_afterAdd deprecation warning.
-  [wichert]
-
 * (Briefly) document the plone.app.folder.tests.bbb usage.
   [wichert]
 
