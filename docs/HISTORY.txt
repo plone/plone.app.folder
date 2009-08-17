@@ -4,6 +4,9 @@ Changelog
 1.0a2 - Unreleased
 ------------------
 
+* Work around imports no longer present in Plone 4.0.
+  [witsch]
+
 * (Briefly) document the plone.app.folder.tests.bbb usage.
   [wichert]
 

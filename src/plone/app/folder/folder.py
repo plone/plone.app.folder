@@ -2,8 +2,6 @@ from AccessControl import ClassSecurityInfo
 from zope.interface import implements
 from Products.CMFCore.permissions import View
 from Products.ATContentTypes.interface import IATFolder
-from Products.ATContentTypes.interface.archive import IArchivable
-from Products.ATContentTypes.interface.image import IPhotoAlbumAble
 from Products.ATContentTypes.interfaces import IATFolder as Z2IATFolder
 from Products.ATContentTypes.interfaces import IATBTreeFolder as Z2IATBTreeFolder
 from Products.ATContentTypes.content.schemata import ATContentTypeSchema
@@ -15,6 +13,8 @@ from Products.ATContentTypes.content.base import registerATCT
 
 from plone.app.folder import packageName
 from plone.app.folder.base import BaseBTreeFolder
+from plone.app.folder.bbb import IArchivable, IPhotoAlbumAble
+from plone.app.folder.bbb import folder_implements
 
 
 ATFolderSchema = ATContentTypeSchema.copy() + ConstrainTypesMixinSchema.copy() + NextPreviousAwareSchema.copy()
@@ -25,9 +25,7 @@ class ATFolder(ATCTFolderMixin, BaseBTreeFolder):
     """ a folder suitable for holding a very large number of items """
     implements(IATFolder, IArchivable, IPhotoAlbumAble)
 
-    __implements__ = (ATCTFolderMixin.__implements__,
-                      BaseBTreeFolder.__implements__,
-                      Z2IATBTreeFolder, Z2IATFolder)
+    __implements__ = folder_implements
 
     schema =  ATFolderSchema
     security = ClassSecurityInfo()

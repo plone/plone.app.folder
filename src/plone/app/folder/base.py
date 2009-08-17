@@ -1,13 +1,12 @@
 from Globals import InitializeClass
 from ComputedAttribute import ComputedAttribute
 from OFS.interfaces import IOrderedContainer as IOrderedContainer
-from OFS.IOrderSupport import IOrderedContainer as Z2IZopeOrderedContainer
 from OFS.ObjectManager import REPLACEABLE
 from webdav.NullResource import NullResource
 from zope.interface import implements
-from Products.CMFPlone.interfaces.OrderedContainer import IOrderedContainer as Z2IOrderedContainer
 from Products.Archetypes.atapi import BaseFolder
 from plone.folder.ordered import OrderedBTreeFolderBase
+from plone.app.folder.bbb import base_implements
 
 
 # to keep backward compatibility
@@ -18,8 +17,7 @@ class BaseBTreeFolder(OrderedBTreeFolderBase, BaseFolder):
     """ a base class for btree-based folders supporting ordering """
     implements(IOrderedContainer)
 
-    __implements__ = (BaseFolder.__implements__,
-                      Z2IOrderedContainer, Z2IZopeOrderedContainer)
+    __implements__ = base_implements
 
     def __init__(self, oid, **kwargs):
         OrderedBTreeFolderBase.__init__(self, oid)
