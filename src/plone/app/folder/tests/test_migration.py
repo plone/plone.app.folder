@@ -81,10 +81,8 @@ class TestMigrationHelpers(IntegrationTestCase):
         self.failUnless(hasattr(btree, '_tree'))
         self.failIf(btree.__dict__.has_key('_tree'))
         self.assertEqual(btree._tree, None)
-        # please note that the default adapter returns empty lists here
-        # while the partial one raises `AttributeErrors`
-        self.assertEqual(list(btree.objectValues()), [])
-        self.assertEqual(list(btree.objectIds()), [])
+        self.assertRaises(AttributeError, btree.objectValues)
+        self.assertRaises(AttributeError, btree.objectIds)
         self.assertEqual(btree._objects,
             (dict(id='doc1', meta_type='ATDocument'),
             (dict(id='event1', meta_type='ATEvent'))))
@@ -102,7 +100,7 @@ class TestMigrationHelpers(IntegrationTestCase):
         self.failIf(foo.__dict__.has_key('_tree'))
         self.assertEqual(foo._tree, None)
         self.assertEqual(foo._objects,
-            (dict(id='bar', meta_type='ATFolder'),))
+            (dict(id='bar', meta_type='NonBTreeFolder'),))
         bar = aq_base(getattr(foo, 'bar'))
         self.failUnless(isinstance(bar, BTreeFolder))
         self.failIf(bar.__dict__.has_key('_objects'))   # no sub-objects
