@@ -1,5 +1,5 @@
 from Acquisition import aq_base, aq_parent
-from zope.interface import classImplements, implements
+from zope.interface import classImplements
 from zope.component import getMultiAdapter
 from zope.publisher.browser import TestRequest
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base as BTreeFolder
@@ -8,14 +8,9 @@ from plone.folder.interfaces import IOrderable, IOrdering
 from plone.app.folder.tests.base import IntegrationTestCase
 from plone.app.folder.tests.layer import IntegrationLayer
 from plone.app.folder.tests.content import NonBTreeFolder, create
+from plone.app.folder.tests.content import OrderableFolder
 from plone.app.folder.migration import migrate
 from plone.app.folder.utils import findObjects
-from plone.app.folder.base import BaseBTreeFolder
-
-
-class OrderableFolder(BaseBTreeFolder):
-    """ sample ordered btree-based folder (needing the interface) """
-    implements(IOrderable)
 
 
 def reverseMigrate(folder):

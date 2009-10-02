@@ -10,10 +10,17 @@ from Products.ATContentTypes.content.schemata import ATContentTypeSchema
 from Products.ATContentTypes.content.schemata import finalizeATCTSchema
 from Products.ATContentTypes.lib.constraintypes import ConstrainTypesMixinSchema
 from Products.CMFPlone.utils import _createObjectByType
+from plone.folder.interfaces import IOrderable
+from plone.app.folder.base import BaseBTreeFolder
 
 
 ATFolderSchema = ATContentTypeSchema.copy() + ConstrainTypesMixinSchema
 finalizeATCTSchema(ATFolderSchema, folderish=True, moveDiscussion=False)
+
+
+class OrderableFolder(BaseBTreeFolder):
+    """ sample ordered btree-based folder (needing the interface) """
+    implements(IOrderable)
 
 
 class NonBTreeFolder(ATCTOrderedFolder):
