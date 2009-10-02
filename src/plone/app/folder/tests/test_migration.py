@@ -3,11 +3,11 @@ from zope.interface import classImplements, implements
 from zope.component import getMultiAdapter
 from zope.publisher.browser import TestRequest
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base as BTreeFolder
-from Products.ATContentTypes.content.folder import ATFolder
 from Products.ATContentTypes.content.document import ATDocument
-from Products.CMFPlone.utils import _createObjectByType as create
 from plone.folder.interfaces import IOrderable, IOrdering
 from plone.app.folder.tests.base import IntegrationTestCase
+from plone.app.folder.tests.layer import IntegrationLayer
+from plone.app.folder.tests.content import NonBTreeFolder, create
 from plone.app.folder.migration import migrate
 from plone.app.folder.utils import findObjects
 from plone.app.folder.base import BaseBTreeFolder
@@ -20,12 +20,12 @@ class OrderableFolder(BaseBTreeFolder):
 
 def reverseMigrate(folder):
     """ helper to replace the given regular folder with one based on
-        btrees;  the intendtion is to create the state that would be found
+        btrees;  the intention is to create the state that would be found
         before migration, i.e. a now btree-based folder still holding the
         data structures from a regular one;  all (regular) subfolders
         will be replaced recursively """
     for name, obj in reversed(list(findObjects(folder))):
-        if isinstance(obj, ATFolder):
+        if isinstance(obj, NonBTreeFolder):
             parent = aq_parent(obj)
             data = obj.__dict__.copy()
             data['id'] = oid = obj.getId()
@@ -72,6 +72,8 @@ def getView(context, name, **kw):
 
 class TestMigrationHelpers(IntegrationTestCase):
     """ test helper functions for btree migration """
+
+    layer = IntegrationLayer
 
     def testReverseMigrate(self):
         folder = create('Folder', self.portal, 'folder', title='Foo')
@@ -129,6 +131,8 @@ class TestMigrationHelpers(IntegrationTestCase):
 class TestBTreeMigration(IntegrationTestCase):
     """ test BTree migration tests migration between Folder and
         btree-based folder """
+
+    layer = IntegrationLayer
 
     def afterSetUp(self):
         self.portal._delObject('news')
