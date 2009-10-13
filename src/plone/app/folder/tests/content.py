@@ -1,4 +1,6 @@
 from zope.interface import implements
+from zope.event import notify
+from zope.lifecycleevent import ObjectCreatedEvent, ObjectModifiedEvent
 from AccessControl import ClassSecurityInfo
 from OFS.interfaces import IOrderedContainer
 from Products.ATContentTypes.config import PROJECTNAME
@@ -33,18 +35,26 @@ class NonBTreeFolder(ATCTOrderedFolder):
     archetype_name = 'NonBTreeFolder'
     security = ClassSecurityInfo()
 
-
 permissions['NonBTreeFolder'] = PROJECTNAME + ': ATFolder'
 registerATCT(NonBTreeFolder, PROJECTNAME)
+
+
+def addNonBTreeFolder(container, id, **kwargs):
+    """ at-constructor copied from ClassGen.py """
+    obj = NonBTreeFolder(id)
+    notify(ObjectCreatedEvent(obj))
+    container._setObject(id, obj)
+    obj = container._getOb(id)
+    obj.initializeArchetype(**kwargs)
+    notify(ObjectModifiedEvent(obj))
+    return obj
 
 
 def create(ctype, container, id, *args, **kw):
     """ helper to create old-style folders as their regular type/factory has
         been replaced in plone 4 and isn't available anymore for testing """
     if ctype == 'Folder':
-        dispatcher = container.manage_addProduct['ATContentTypes']
-        factory = dispatcher.addNonBTreeFolder(id, *args, **kw)
-        obj = container._getOb(id)
+        obj = addNonBTreeFolder(container, id, *args, **kw)
         obj._setPortalTypeName(ctype)
         return obj
     else:
