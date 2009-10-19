@@ -1,4 +1,7 @@
-from App.class_init import InitializeClass
+try:
+    from App.class_init import InitializeClass
+except ImportError:
+    from Globals import InitializeClass
 from ComputedAttribute import ComputedAttribute
 from OFS.interfaces import IOrderedContainer as IOrderedContainer
 from OFS.ObjectManager import REPLACEABLE
