@@ -11,9 +11,10 @@ from transaction import commit
 from Testing import ZopeTestCase as ztc
 
 from Products.PloneTestCase import PloneTestCase as ptc
-from Products.PloneTestCase.layer import PloneSite
 from Products.CMFPlone.utils import _createObjectByType
 from Products.CMFPlone.PloneBatch import Batch
+from plone.app.folder.tests.layer import IntegrationLayer
+from plone.app.folder.tests.content import create as createNonBTreeFolder
 
 # setup plone site
 ptc.setupPloneSite()
@@ -24,7 +25,7 @@ SIZE = 500
 
 class TestBenchmarkCase(ptc.PloneTestCase):
 
-    class layer(PloneSite):
+    class layer(IntegrationLayer):
 
         @classmethod
         def setUp(cls):
@@ -38,7 +39,7 @@ class TestBenchmarkCase(ptc.PloneTestCase):
                 obj.setText('This is the <b>HTML</b> text for item with id %d' % nr)
                 obj.reindexObject(idxs=('Title', 'Description', 'SearchableText'))
 
-            regular = _createObjectByType('Old Folder', portal, 'regular')
+            regular = createNonBTreeFolder('Folder', portal, 'regular')
             large = _createObjectByType('Large Plone Folder', portal, 'large')
             ordered = _createObjectByType('Folder', portal, 'ordered')
 
