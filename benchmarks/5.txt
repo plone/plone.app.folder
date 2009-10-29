@@ -1,0 +1,7 @@
+	Large	Ordered	Regular
+Batch	0.028	0.051	0.049
+CreateContent	0.326	0.331	0.407
+ObjectIDs	0.028	0.517	0.028
+ObjectPosition	0.0	0.589	0.059
+ObjectValues	0.006	0.037	0.036
+Random	0.049	0.053	0.039
