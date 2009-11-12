@@ -1,5 +1,6 @@
 try:
     from App.class_init import InitializeClass
+    InitializeClass     # keep pyflakes happy
 except ImportError:
     from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -20,7 +21,8 @@ has_btree = 1
 
 
 class ReplaceableWrapper:
-    """A wrapper around an object to make it replaceable."""
+    """ a wrapper around an object to make it replaceable """
+
     def __init__(self, ob):
         self.__ob = ob
 
@@ -59,7 +61,7 @@ class BaseBTreeFolder(OrderedBTreeFolderBase, BaseFolder):
 
     security.declareProtected(View, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
-        """Special case index_html"""
+        """ Special case index_html """
         if 'index_html' in self:
             return self._getOb('index_html')
         request = REQUEST
@@ -68,7 +70,7 @@ class BaseBTreeFolder(OrderedBTreeFolderBase, BaseFolder):
         if request and request.has_key('REQUEST_METHOD'):
             if request.maybe_webdav_client:
                 method = request['REQUEST_METHOD']
-                if method in ('PUT',):
+                if method  == 'PUT':
                     # Very likely a WebDAV client trying to create something
                     return ReplaceableWrapper(NullResource(self, 'index_html'))
                 elif method in ('GET', 'HEAD', 'POST'):
@@ -77,8 +79,8 @@ class BaseBTreeFolder(OrderedBTreeFolderBase, BaseFolder):
                 else:
                     raise AttributeError, 'index_html'
         # Acquire from parent
-        _target = aq_parent(aq_inner(self)).aq_acquire('index_html')
-        return ReplaceableWrapper(aq_base(_target).__of__(self))
+        target = aq_parent(aq_inner(self)).aq_acquire('index_html')
+        return ReplaceableWrapper(aq_base(target).__of__(self))
 
     index_html = ComputedAttribute(index_html, 1)
 

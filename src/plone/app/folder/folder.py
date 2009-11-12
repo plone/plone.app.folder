@@ -2,8 +2,6 @@ from AccessControl import ClassSecurityInfo
 from zope.interface import implements
 from Products.CMFCore.permissions import View
 from Products.ATContentTypes.interface import IATFolder
-from Products.ATContentTypes.interfaces import IATFolder as Z2IATFolder
-from Products.ATContentTypes.interfaces import IATBTreeFolder as Z2IATBTreeFolder
 from Products.ATContentTypes.content.schemata import ATContentTypeSchema
 from Products.ATContentTypes.content.schemata import NextPreviousAwareSchema
 from Products.ATContentTypes.content.schemata import finalizeATCTSchema

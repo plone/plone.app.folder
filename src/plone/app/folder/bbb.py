@@ -6,6 +6,7 @@ from zope.interface import Interface
 try:
     from Products.ATContentTypes.interface.archive import IArchivable
     from Products.ATContentTypes.interface.image import IPhotoAlbumAble
+    IArchivable, IPhotoAlbumAble    # keep pyflakes happy
 except ImportError:
     class IArchivable(Interface):
         """ marker interface for now gone bbb import """
