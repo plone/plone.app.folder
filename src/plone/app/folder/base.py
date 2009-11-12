@@ -2,12 +2,15 @@ try:
     from App.class_init import InitializeClass
 except ImportError:
     from Globals import InitializeClass
+from AccessControl import ClassSecurityInfo
+from Acquisition import aq_inner, aq_parent, aq_base
 from ComputedAttribute import ComputedAttribute
 from OFS.interfaces import IOrderedContainer as IOrderedContainer
 from OFS.ObjectManager import REPLACEABLE
 from webdav.NullResource import NullResource
 from zope.interface import implements
 from Products.Archetypes.atapi import BaseFolder
+from Products.CMFCore.permissions import View
 from plone.folder.ordered import OrderedBTreeFolderBase
 from plone.app.folder.bbb import base_implements
 
@@ -16,11 +19,24 @@ from plone.app.folder.bbb import base_implements
 has_btree = 1
 
 
+class ReplaceableWrapper:
+    """A wrapper around an object to make it replaceable."""
+    def __init__(self, ob):
+        self.__ob = ob
+
+    def __getattr__(self, name):
+        if name == '__replaceable__':
+            return REPLACEABLE
+        return getattr(self.__ob, name)
+
+
 class BaseBTreeFolder(OrderedBTreeFolderBase, BaseFolder):
     """ a base class for btree-based folders supporting ordering """
     implements(IOrderedContainer)
 
     __implements__ = base_implements
+    
+    security = ClassSecurityInfo()
 
     def __init__(self, oid, **kwargs):
         OrderedBTreeFolderBase.__init__(self, oid)
@@ -41,19 +57,28 @@ class BaseBTreeFolder(OrderedBTreeFolderBase, BaseFolder):
     # override the version from `CMFDynamicViewFTI/browserdefault.py:72`
     __call__ = BaseFolder.__call__.im_func
 
-    def index_html(self):
-        """ Allow creation of . """
-        if self.has_key('index_html'):
+    security.declareProtected(View, 'index_html')
+    def index_html(self, REQUEST=None, RESPONSE=None):
+        """Special case index_html"""
+        if 'index_html' in self:
             return self._getOb('index_html')
-        request = getattr(self, 'REQUEST', None)
+        request = REQUEST
+        if request is None:
+            request = getattr(self, 'REQUEST', None)
         if request and request.has_key('REQUEST_METHOD'):
-            if (request.maybe_webdav_client and
-                request['REQUEST_METHOD'] in ['PUT']):
-                # Very likely a WebDAV client trying to create something
-                nr = NullResource(self, 'index_html')
-                nr.__replaceable__ = REPLACEABLE
-                return nr
-        return None
+            if request.maybe_webdav_client:
+                method = request['REQUEST_METHOD']
+                if method in ('PUT',):
+                    # Very likely a WebDAV client trying to create something
+                    return ReplaceableWrapper(NullResource(self, 'index_html'))
+                elif method in ('GET', 'HEAD', 'POST'):
+                    # Do nothing, let it go and acquire.
+                    pass
+                else:
+                    raise AttributeError, 'index_html'
+        # Acquire from parent
+        _target = aq_parent(aq_inner(self)).aq_acquire('index_html')
+        return ReplaceableWrapper(aq_base(_target).__of__(self))
 
     index_html = ComputedAttribute(index_html, 1)
 

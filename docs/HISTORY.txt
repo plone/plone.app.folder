@@ -4,6 +4,9 @@ Changelog
 1.0a2 - Unreleased
 ------------------
 
+* Copy the index_html method from ATContentTypes to better support WebDAV.
+  [davisagli]
+
 * Add in-place migration code.
   [witsch]
 
