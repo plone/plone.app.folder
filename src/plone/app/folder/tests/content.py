@@ -6,7 +6,7 @@ from OFS.interfaces import IOrderedContainer
 from Products.ATContentTypes.config import PROJECTNAME
 from Products.ATContentTypes.content.base import registerATCT
 from Products.ATContentTypes.content.base import ATCTOrderedFolder
-from Products.ATContentTypes.interfaces import IATFolder
+from Products.ATContentTypes.interface import IATFolder
 from Products.ATContentTypes.permission import permissions
 from Products.ATContentTypes.content.schemata import ATContentTypeSchema
 from Products.ATContentTypes.content.schemata import finalizeATCTSchema
@@ -14,6 +14,7 @@ from Products.ATContentTypes.lib.constraintypes import ConstrainTypesMixinSchema
 from Products.CMFPlone.utils import _createObjectByType
 from plone.folder.interfaces import IOrderable
 from plone.app.folder.base import BaseBTreeFolder
+from plone.app.folder.bbb import folder_implements
 
 
 ATFolderSchema = ATContentTypeSchema.copy() + ConstrainTypesMixinSchema
@@ -29,6 +30,8 @@ class NonBTreeFolder(ATCTOrderedFolder):
     """ an old-style folder much like `ATFolder` before Plone 4;  this is
         a reduced version of `ATContentTypes.content.folder.ATFolder` """
     implements(IATFolder, IOrderedContainer)
+
+    __implements__ = folder_implements
 
     schema = ATFolderSchema
     portal_type = 'NonBTreeFolder'
