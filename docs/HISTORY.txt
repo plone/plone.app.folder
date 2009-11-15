@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0a2 - Unreleased
+1.0b1 - Unreleased
 ------------------
 
 * Copy the index_html method from ATContentTypes to better support WebDAV.
