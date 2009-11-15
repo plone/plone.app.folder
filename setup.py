@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 from os.path import join
 
-version = '1.0b1'
+version = '1.0b2'
 readme = open(join('README.txt')).read()
 history = open(join('docs', 'HISTORY.txt')).read()
 
