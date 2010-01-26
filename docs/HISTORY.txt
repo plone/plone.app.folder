@@ -3,13 +3,15 @@ Changelog
 
 1.0b2 - Unreleased
 ------------------
-* Add IATBTreeFolder to ATFolder's implements().
+
+* Add `IATBTreeFolder` to `implements` list of `ATFolder` replacement.
   [thet]
+
 
 1.0b1 - Released Nov 15, 2009
 -----------------------------
 
-* Copy the index_html method from ATContentTypes to better support WebDAV.
+* Copy the `index_html` method from `ATContentTypes` to better support WebDAV.
   [davisagli]
 
 * Add in-place migration code.
@@ -18,7 +20,7 @@ Changelog
 * Work around imports no longer present in Plone 4.0.
   [witsch]
 
-* (Briefly) document the plone.app.folder.tests.bbb usage.
+* (Briefly) document the `plone.app.folder.tests.bbb` usage.
   [wichert]
 
 
