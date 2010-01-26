@@ -19,7 +19,7 @@ def initialize(context):
     content_types, constructors, ftis = atapi.process_types(
         atapi.listTypes(packageName), packageName)
 
-    assert len(content_types) == 1, 'only a new folder, please!'
+    assert len(content_types) == 1, 'only one new folder, please!'
 
     for atype, constructor, fti in zip(content_types, constructors, ftis):
         utils.ContentInit('%s: %s' % (packageName, atype.portal_type),
