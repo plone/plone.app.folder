@@ -1,6 +1,11 @@
+from os import environ
 from sys import maxint
 from inspect import currentframe
+from Globals import DevelopmentMode
 from Acquisition import aq_parent
+
+
+paranoid = DevelopmentMode or 'ZOPETESTCASE' in environ
 
 
 class GopipIndex(object):
@@ -29,10 +34,12 @@ class GopipIndex(object):
         traverse = aq_parent(self.catalog).unrestrictedTraverse
         container = traverse(path)
 
-        # make sure the path is the same for all results
-        for rid in rids:
-            p = self.catalog.paths[rid]
-            assert path == p[:p.rindex('/')]
+        # make sure the path is the same for all results, but only
+        # in debug-mode or during test runs...
+        if paranoid:
+            for rid in rids:
+                p = self.catalog.paths[rid]
+                assert path == p[:p.rindex('/')]
 
         pos = {}
         getrid = self.catalog.uids.get
