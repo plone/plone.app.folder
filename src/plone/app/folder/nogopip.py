@@ -39,7 +39,8 @@ class GopipIndex(object):
         if paranoid:
             for rid in rids:
                 p = self.catalog.paths[rid]
-                assert path == p[:p.rindex('/')]
+                p = p[:p.rindex('/')]
+                assert path == p, 'path mismatch %s - %s' % (path, p)
 
         pos = {}
         getrid = self.catalog.uids.get
