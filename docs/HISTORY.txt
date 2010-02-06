@@ -4,6 +4,10 @@ Changelog
 1.0b3 - Unreleased
 ------------------
 
+* Remove `getObjPositionInParent` catalog index and use a sort index based
+  on the folder's order information instead.
+  [witsch]
+
 
 1.0b2 - Released January 28, 2010
 ---------------------------------

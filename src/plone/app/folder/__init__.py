@@ -28,3 +28,6 @@ def initialize(context):
             extra_constructors = (constructor,),
             fti = (fti,),
             ).initialize(context)
+
+    from plone.app.folder.nogopip import applyPatch
+    applyPatch()    # fake the "gopip" sort index

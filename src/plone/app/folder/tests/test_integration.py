@@ -17,6 +17,10 @@ class FolderReplacementTests(IntegrationTestCase):
         from plone.app.folder.base import BaseBTreeFolder
         self.failUnless(isinstance(self.folder['foo'], BaseBTreeFolder))
 
+    def testNoGetObjPositionInParent(self):
+        catalog = self.portal.portal_catalog
+        self.failIf('getObjPositionInParent' in catalog.indexes())
+
 
 def test_suite():
     return defaultTestLoader.loadTestsFromName(__name__)
