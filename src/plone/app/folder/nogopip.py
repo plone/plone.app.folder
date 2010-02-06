@@ -1,11 +1,13 @@
 from os import environ
 from sys import maxint
+from logging import getLogger
 from inspect import currentframe
 from Globals import DevelopmentMode
 from Acquisition import aq_parent
 
 
-paranoid = DevelopmentMode or 'ZOPETESTCASE' in environ
+logger = getLogger(__name__)
+testing = 'ZOPETESTCASE' in environ
 
 
 class GopipIndex(object):
@@ -36,11 +38,14 @@ class GopipIndex(object):
 
         # make sure the path is the same for all results, but only
         # in debug-mode or during test runs...
-        if paranoid:
+        if DevelopmentMode or testing:
             for rid in rids:
                 p = self.catalog.paths[rid]
                 p = p[:p.rindex('/')]
-                assert path == p, 'path mismatch %s - %s' % (path, p)
+                if not path == p:
+                    msg = 'path mismatch during "gopip" sorting: %s - %s'
+                    logger.error(msg, path, p)
+                    assert not testing, msg % (path, p)
 
         pos = {}
         getrid = self.catalog.uids.get
