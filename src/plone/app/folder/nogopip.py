@@ -60,7 +60,7 @@ def reindexOnReorder(self, parent):
     pass
 
 
-def applyPatch():
+def applyPatches():
     from Products.ZCatalog.Catalog import Catalog
     Catalog.__nogopip_old_getSortIndex = Catalog._getSortIndex
     Catalog._getSortIndex = _getSortIndex

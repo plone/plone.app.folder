@@ -29,5 +29,7 @@ def initialize(context):
             fti = (fti,),
             ).initialize(context)
 
-    from plone.app.folder.nogopip import applyPatch
-    applyPatch()    # fake the "gopip" sort index
+
+# apply monkey patches regarding "nogopip"
+from plone.app.folder.nogopip import applyPatches
+applyPatches()
