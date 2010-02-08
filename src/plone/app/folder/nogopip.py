@@ -15,7 +15,10 @@ class GopipIndex(object):
         self.catalog = catalog
 
     def __len__(self):
-        return maxint
+        # with python 2.4 returning `sys.maxint` gives:
+        # OverflowError: __len__() should return 0 <= outcome < 2**31
+        # so...
+        return 2**31 - 1
 
     def documentToKeyMap(self):
         # we need to get the containers in order to get the respective
