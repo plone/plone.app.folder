@@ -1,13 +1,9 @@
-from os import environ
-from sys import maxint
 from logging import getLogger
 from inspect import currentframe
-from Globals import DevelopmentMode
 from Acquisition import aq_parent
 
 
 logger = getLogger(__name__)
-testing = 'ZOPETESTCASE' in environ
 
 
 class GopipIndex(object):
@@ -22,41 +18,23 @@ class GopipIndex(object):
         return maxint
 
     def documentToKeyMap(self):
-        # we need to figure out the container in order to get
-        # the order of its objects;  luckily this is only ever
-        # called from `sortResults`, so we can get it form there
-        # lurker says this won't work in jython, though! :)
+        # we need to get the containers in order to get the respective
+        # positions of the search results, but before that we need those
+        # results themselves.  luckily this is only ever called from
+        # `sortResults`, so we can get it form there.  oh, and lurker
+        # says this won't work in jython, though! :)
         rs = currentframe(1).f_locals['rs']
-        if not rs:
-            return {}
-        rids = iter(rs)
-        first = rids.next()         # first rid in result set
-        path = self.catalog.paths[first]
-        path = path[:path.rindex('/')]
-        traverse = aq_parent(self.catalog).unrestrictedTraverse
-        container = traverse(path)
-
-        # make sure the path is the same for all results, but only
-        # in debug-mode or during test runs...
-        if DevelopmentMode or testing:
-            for rid in rids:
-                p = self.catalog.paths[rid]
-                p = p[:p.rindex('/')]
-                if not path == p:
-                    msg = 'path mismatch during "gopip" sorting: %s - %s'
-                    logger.error(msg, path, p)
-                    assert not testing, msg % (path, p)
-
         pos = {}
-        getrid = self.catalog.uids.get
-        if hasattr(container, 'idsInOrder'):
-            ids = container.idsInOrder
-        else:
-            ids = container.objectIds
-        for idx, id in enumerate(ids()):
-            rid = getrid(path + '/' + id)
-            if rid is not None and rid in rs:
-                pos[rid] = idx
+        containers = {}
+        getpath = self.catalog.paths.get
+        traverse = aq_parent(self.catalog).unrestrictedTraverse
+        for rid in rs:
+            path = getpath(rid)
+            parent, id = path.rsplit('/', 1)
+            container = containers.get(parent, None)
+            if container is None:
+                container = containers[parent] = traverse(parent)
+            pos[rid] = container.getObjectPosition(id)
         return pos
 
 
