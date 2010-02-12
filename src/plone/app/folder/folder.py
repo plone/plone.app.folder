@@ -20,9 +20,13 @@ ATFolderSchema = ATContentTypeSchema.copy() + ConstrainTypesMixinSchema.copy() +
 finalizeATCTSchema(ATFolderSchema, folderish=True, moveDiscussion=False)
 
 
+class IATUnifiedFolder(IATFolder):
+    """ marker interface for the new, unified folders """
+
+
 class ATFolder(ATCTFolderMixin, BaseBTreeFolder):
     """ a folder suitable for holding a very large number of items """
-    implements(IATFolder, IATBTreeFolder, IArchivable, IPhotoAlbumAble)
+    implements(IATUnifiedFolder, IATBTreeFolder, IArchivable, IPhotoAlbumAble)
 
     __implements__ = folder_implements
 

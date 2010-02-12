@@ -11,6 +11,8 @@
     <include file="profiles.zcml" />
     <include package="plone.folder" />
 
+    <adapter factory=".nextprevious.NextPrevious" />
+
     <browser:page
         for="*"
         name="migrate-btrees"
