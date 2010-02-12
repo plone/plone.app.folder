@@ -3,17 +3,13 @@ from plone.app.folder.tests.base import IntegrationTestCase
 from plone.app.folder.tests.layer import IntegrationLayer
 
 
-class TestNextPrevious(IntegrationTestCase):
+class NextPreviousSupportTests(IntegrationTestCase):
     """ basic use cases and tests for next/previous navigation, essentially
         borrowed from `Products.CMFPlone.tests.testNextPrevious.py` """
 
     layer = IntegrationLayer
 
     def afterSetUp(self):
-        self.populateSite()
-
-    #set up a lot of content - can be reused in each (sub)test
-    def populateSite(self):
         self.setRoles(['Manager'])
         self.portal.invokeFactory('Document', 'doc1')
         self.portal.invokeFactory('Document', 'doc2')
@@ -36,82 +32,58 @@ class TestNextPrevious(IntegrationTestCase):
 
     def testIfFolderImplementsPreviousNext(self):
         self.folder.invokeFactory('Folder', 'case')
-        self.failUnless(INextPreviousProvider(self.folder.case, None) is not None)
+        self.failUnless(INextPreviousProvider(self.folder.case, None))
 
     def testNextPreviousEnablingOnCreation(self):
         self.folder.invokeFactory('Folder', 'case')
-        
-        #first the field on the atfolder direct, to get sure the field is there
-        enabled = self.folder.case.getNextPreviousEnabled()
-        self.failIf(enabled)
-        
-        #secoundly we test if the adapter provides the isNextPreviousEnabled()
-        adapter = INextPreviousProvider(self.folder.case)
-        self.failIf(adapter.enabled)
+        # first ensure the field on the atfolder is there
+        self.failIf(self.folder.case.getNextPreviousEnabled())
+        # then check if the adapter provides the attribute
+        self.failIf(INextPreviousProvider(self.folder.case).enabled)
 
     def testNextPreviousViewDisabled(self):
-        view = self.portal.folder1.doc11.restrictedTraverse('@@plone_nextprevious_view', None)
+        doc = self.portal.folder1.doc11
+        view = doc.restrictedTraverse('@@plone_nextprevious_view')
         self.failIf(view is None)
-        
-        #is it enabled (default is false)
         self.failIf(view.enabled())
 
     def testNextPreviousViewEnabled(self):
-        #set the parent folder "getNextPreviousEnabled" to true
         self.portal.folder1.setNextPreviousEnabled(True)
-        
-        # clear request memos
-        view = self.portal.folder1.doc12.restrictedTraverse('@@plone_nextprevious_view', None)
+        doc = self.portal.folder1.doc11
+        view = doc.restrictedTraverse('@@plone_nextprevious_view')
+        self.failIf(view is None)
         self.failUnless(view.enabled())
 
-        # test the next method
-        next = view.next()
-        self.assertEquals(next['url'], self.portal.folder1.doc13.absolute_url())
-        
-        # test the previous method
-        previous = view.previous()
-        self.assertEquals(previous['url'], self.portal.folder1.doc11.absolute_url())
-
     def testAdapterOnPortal(self):
-        view = self.portal.doc1.restrictedTraverse('@@plone_nextprevious_view', None)
+        doc = self.portal.doc1
+        view = doc.restrictedTraverse('@@plone_nextprevious_view')
         self.failUnless(view)
         self.failIf(view.enabled())
-        self.assertEquals(None, view.next())
-        self.assertEquals(None, view.previous())
+        self.assertEqual(None, view.next())
+        self.assertEqual(None, view.previous())
 
     def testNextPreviousItems(self):
-        self.folder.invokeFactory('Folder', 'case3')
-        
-        for documentCounter in range(1, 6):
-            self.folder.case3.invokeFactory('Document', 'subDoc%d' % documentCounter)
-    
-        container  = self.folder.case3
-        testedItem = container.subDoc2
-        
-        #set up the adapter for the folder
+        container = self.folder[self.folder.invokeFactory('Folder', 'case3')]
+        for id in range(1, 6):
+            container.invokeFactory('Document', 'subDoc%d' % id)
         adapter = INextPreviousProvider(container)
+        # text data for next/previous items
+        next = adapter.getNextItem(container.subDoc2)
+        self.assertEqual(next['id'], 'subDoc3')
+        self.assertEqual(next['portal_type'], 'Document')
+        self.assertEqual(next['url'], container.subDoc3.absolute_url())
+        previous = adapter.getPreviousItem(container.subDoc2)
+        self.assertEqual(previous['id'], 'subDoc1')
+        self.assertEqual(previous['portal_type'], 'Document')
+        self.assertEqual(previous['url'], container.subDoc1.absolute_url())
+        # first item should not have a previous item
+        previous = adapter.getPreviousItem(container.subDoc1)
+        self.assertEqual(previous, None)
+        # last item should not have a next item
+        next = adapter.getNextItem(container.subDoc5)
+        self.assertEqual(next, None)
 
-        #test the next item of subDoc2
-        next = adapter.getNextItem(self.folder.case3.subDoc2)
-        self.failUnlessEqual(next["id"], 'subDoc3')
-
-        #test that the contenttype is defined correct
-        self.failUnlessEqual(next["portal_type"], 'Document')
-        
-        #test the previous item of subDoc2
-        previous = adapter.getPreviousItem(self.folder.case3.subDoc2)
-        self.failUnlessEqual(previous["id"], 'subDoc1')
-        
-        #first item should not have a previous item
-        previous = adapter.getPreviousItem(self.folder.case3.subDoc1)
-        self.failUnlessEqual(previous, None)
-
-        #last item should not have a next item
-        next = adapter.getNextItem(self.folder.case3.subDoc5)
-        self.failUnlessEqual(next, None)
 
 def test_suite():
-    from unittest import TestSuite, makeSuite
-    suite = TestSuite()
-    suite.addTest(makeSuite(TestNextPrevious))
-    return suite
+    from unittest import defaultTestLoader
+    return defaultTestLoader.loadTestsFromName(__name__)
