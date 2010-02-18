@@ -4,6 +4,10 @@ Changelog
 1.0b3 - Unreleased
 ------------------
 
+* Add optimization for sorting results by folder position for the usual
+  "all results in one folder" case.
+  [witsch]
+
 * Add adapter for previous/next support that doesn't need the catalog.
   [witsch]
 

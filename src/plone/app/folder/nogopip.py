@@ -27,18 +27,33 @@ class GopipIndex(object):
         # `sortResults`, so we can get it form there.  oh, and lurker
         # says this won't work in jython, though! :)
         rs = currentframe(1).f_locals['rs']
-        pos = {}
+        rids = {}
+        items = []
         containers = {}
         getpath = self.catalog.paths.get
         traverse = aq_parent(self.catalog).unrestrictedTraverse
         for rid in rs:
             path = getpath(rid)
             parent, id = path.rsplit('/', 1)
-            container = containers.get(parent, None)
+            container = containers.get(parent)
             if container is None:
-                container = containers[parent] = traverse(parent)
-            pos[rid] = container.getObjectPosition(id)
-        return pos
+                containers[parent] = container = traverse(parent)
+            rids[id] = rid              # remember in case of single folder
+            items.append((rid, container, id))  # or else for deferred lookup
+        pos = {}
+        if len(containers) == 1:
+            # the usual "all from one folder" case can be optimized
+            folder = containers.values()[0]
+            for idx, id in enumerate(folder.getOrdering().idsInOrder()):
+                rid = rids.get(id)
+                if rid:
+                    pos[rid] = idx
+            return pos
+        else:
+            # otherwise the entire map needs to be constructed...
+            for rid, container, id in items:
+                pos[rid] = container.getObjectPosition(id)
+            return pos
 
 
 def _getSortIndex(self, args):
