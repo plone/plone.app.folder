@@ -17,9 +17,12 @@ class FolderReplacementTests(IntegrationTestCase):
         from plone.app.folder.base import BaseBTreeFolder
         self.failUnless(isinstance(self.folder['foo'], BaseBTreeFolder))
 
-    def testNoGetObjPositionInParent(self):
+    def testGetObjPositionInParentIndex(self):
+        from plone.app.folder.nogopip import GopipIndex
         catalog = self.portal.portal_catalog
-        self.failIf('getObjPositionInParent' in catalog.indexes())
+        self.failUnless('getObjPositionInParent' in catalog.indexes())
+        self.failUnless(isinstance(catalog.Indexes['getObjPositionInParent'],
+            GopipIndex))
 
 
 def test_suite():

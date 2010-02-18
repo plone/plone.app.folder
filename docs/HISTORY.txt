@@ -4,6 +4,10 @@ Changelog
 1.0b3 - Unreleased
 ------------------
 
+* Replace monkey patch for `Catalog._getSortIndex` with a fake index that
+  can sort search results according to their position in the container.
+  [witsch]
+
 * Add optimization for sorting results by folder position for the usual
   "all results in one folder" case.
   [witsch]

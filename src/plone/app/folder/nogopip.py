@@ -1,18 +1,60 @@
 from logging import getLogger
 from inspect import currentframe
-from Acquisition import aq_parent
+from zope.interface import implements
+from zope.component import getUtility
+from App.special_dtml import DTMLFile
+from OFS.SimpleItem import SimpleItem
+from Products.PluginIndexes.interfaces import IPluggableIndex, ISortIndex
+from Products.CMFCore.interfaces import ISiteRoot
 
 
 logger = getLogger(__name__)
 
 
-class GopipIndex(object):
+class StubIndex(SimpleItem):
+    """ stub catalog index doing nothing """
+    implements(IPluggableIndex)
+
+    def __init__(self, id, *args, **kw):
+        self.id = id
+
+    def getId(self):
+        return self.id
+
+    def getEntryForObject(self, *args, **kw):
+        return []
+
+    def getIndexSourceNames(self):
+        return [self.id]
+
+    def index_object(self, *args, **kw):
+        return 0
+
+    def unindex_object(self, *args, **kw):
+        pass
+
+    def _apply_index(self, *args, **kw):
+        return None
+
+    def numObjects(self):
+        return 0
+
+    def clear(self):
+        pass
+
+
+class GopipIndex(StubIndex):
     """ fake index for sorting against `getObjPositionInParent` """
+    implements(ISortIndex)
+
+    meta_type = 'GopipIndex'
+    manage_options= (dict(label='Settings', action='manage_main'),)
 
     keyForDocument = 42
 
-    def __init__(self, catalog):
-        self.catalog = catalog
+    def __init__(self, id, extra=None, caller=None):
+        super(GopipIndex, self).__init__(id)
+        self.catalog = caller._catalog
 
     def __len__(self):
         # with python 2.4 returning `sys.maxint` gives:
@@ -31,7 +73,7 @@ class GopipIndex(object):
         items = []
         containers = {}
         getpath = self.catalog.paths.get
-        traverse = aq_parent(self.catalog).unrestrictedTraverse
+        traverse = getUtility(ISiteRoot).unrestrictedTraverse
         for rid in rs:
             path = getpath(rid)
             parent, id = path.rsplit('/', 1)
@@ -60,12 +102,12 @@ class GopipIndex(object):
             return pos
 
 
-def _getSortIndex(self, args):
-    """ returns the special fake index for "gopip" or a real one """
-    sort_index_name = self._get_sort_attr('on', args)
-    if sort_index_name == 'getObjPositionInParent':
-        return GopipIndex(catalog=self)
-    return self.__nogopip_old_getSortIndex(args)
+manage_addGopipForm = DTMLFile('dtml/addGopipIndex', globals())
+
+def manage_addGopipIndex(self, id, REQUEST=None, RESPONSE=None, URL3=None):
+    """ add a fake gopip index """
+    return self.manage_addIndex(id, 'GopipIndex',
+                REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL3)
 
 
 def reindexOnReorder(self, parent):
@@ -74,8 +116,5 @@ def reindexOnReorder(self, parent):
 
 
 def applyPatches():
-    from Products.ZCatalog.Catalog import Catalog
-    Catalog.__nogopip_old_getSortIndex = Catalog._getSortIndex
-    Catalog._getSortIndex = _getSortIndex
     from Products.CMFPlone.PloneTool import PloneTool
     PloneTool.reindexOnReorder = reindexOnReorder
