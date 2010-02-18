@@ -4,6 +4,10 @@ Changelog
 1.0b3 - Unreleased
 ------------------
 
+* Only apply monkey patch for `reindexOnReorder` on Plone 3.x & shortcut
+  indexing completely if the fake index has been installed.
+  [witsch]
+
 * Replace monkey patch for `Catalog._getSortIndex` with a fake index that
   can sort search results according to their position in the container.
   [witsch]

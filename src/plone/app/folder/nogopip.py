@@ -108,13 +108,3 @@ def manage_addGopipIndex(self, id, REQUEST=None, RESPONSE=None, URL3=None):
     """ add a fake gopip index """
     return self.manage_addIndex(id, 'GopipIndex',
                 REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL3)
-
-
-def reindexOnReorder(self, parent):
-    """ reindexing of "gopip" isn't needed any longer :) """
-    pass
-
-
-def applyPatches():
-    from Products.CMFPlone.PloneTool import PloneTool
-    PloneTool.reindexOnReorder = reindexOnReorder

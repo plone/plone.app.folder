@@ -38,6 +38,7 @@ def initialize(context):
         icon = 'www/index.gif',
         visibility = None)
 
+
 # apply monkey patches regarding "nogopip"
-from plone.app.folder.nogopip import applyPatches
+from plone.app.folder.patches import applyPatches
 applyPatches()
