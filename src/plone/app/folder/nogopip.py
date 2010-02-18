@@ -44,7 +44,11 @@ class GopipIndex(object):
         if len(containers) == 1:
             # the usual "all from one folder" case can be optimized
             folder = containers.values()[0]
-            for idx, id in enumerate(folder.getOrdering().idsInOrder()):
+            try:
+                ids = folder.getOrdering().idsInOrder()
+            except AttributeError:          # site root or old folders...
+                ids = folder.objectIds()
+            for idx, id in enumerate(ids):
                 rid = rids.get(id)
                 if rid:
                     pos[rid] = idx
