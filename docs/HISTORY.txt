@@ -4,6 +4,8 @@ Changelog
 1.0b4 - Unreleased
 ------------------
 
+* Don't try to store an Acquisition wrapped catalog on the positional index.
+  [hannosch]
 
 1.0b3 - Released February 18, 2010
 ----------------------------------

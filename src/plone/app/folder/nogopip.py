@@ -2,6 +2,7 @@ from logging import getLogger
 from inspect import currentframe
 from zope.interface import implements
 from zope.component import getUtility
+from Acquisition import aq_base
 from App.special_dtml import DTMLFile
 from OFS.SimpleItem import SimpleItem
 from Products.PluginIndexes.interfaces import IPluggableIndex, ISortIndex
@@ -54,7 +55,7 @@ class GopipIndex(StubIndex):
 
     def __init__(self, id, extra=None, caller=None):
         super(GopipIndex, self).__init__(id)
-        self.catalog = caller._catalog
+        self.catalog = aq_base(caller._catalog)
 
     def __len__(self):
         # with python 2.4 returning `sys.maxint` gives:
