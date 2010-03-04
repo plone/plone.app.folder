@@ -122,15 +122,18 @@ class TestBenchmarkCase(ptc.PloneTestCase):
     @timecall
     def testBatchRegular(self):
         for x in range(500):
-            Batch(sequence=self.regular.objectValues(), size=SIZE / 10, start=SIZE * 4 / 5)
+            batch = Batch(sequence=self.regular.objectValues(), size=SIZE / 10, start=SIZE * 4 / 5)
+            [b for b in batch]
     @timecall
     def testBatchLarge(self):
         for x in range(500):
-            Batch(sequence=self.large.objectValues(), size=SIZE / 10, start=SIZE * 4 / 5)
+            batch = Batch(sequence=self.large.objectValues(), size=SIZE / 10, start=SIZE * 4 / 5)
+            [b for b in batch]
     @timecall
     def testBatchOrdered(self):
         for x in range(500):
-            Batch(sequence=self.ordered.objectValues(), size=SIZE / 10, start=SIZE * 4 / 5)
+            batch = Batch(sequence=self.ordered.objectValues(), size=SIZE / 10, start=SIZE * 4 / 5)
+            [b for b in batch]
 
     # random access
     @timecall
