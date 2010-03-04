@@ -91,15 +91,15 @@ class TestBenchmarkCase(ptc.PloneTestCase):
     @timecall
     def testObjectValuesRegular(self):
         for x in range(500):
-            self.regular.objectValues()
+            [obj for obj in self.regular.objectValues()]
     @timecall
     def testObjectValuesLarge(self):
         for x in range(500):
-            self.large.objectValues()
+            [obj for obj in self.large.objectValues()]
     @timecall
     def testObjectValuesOrdered(self):
         for x in range(500):
-            self.ordered.objectValues()
+            [obj for obj in self.ordered.objectValues()]
 
     # object positions
     @timecall
