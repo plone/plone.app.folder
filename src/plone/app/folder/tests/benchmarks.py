@@ -77,15 +77,15 @@ class TestBenchmarkCase(ptc.PloneTestCase):
     @timecall
     def testObjectIDsRegular(self):
         for x in range(5000):
-            self.regular.objectIds(spec='ATDocument')
+            [i for i in self.regular.objectIds()]
     @timecall
     def testObjectIDsLarge(self):
         for x in range(5000):
-            self.large.objectIds(spec='ATDocument')
+            [i for i in self.large.objectIds()]
     @timecall
     def testObjectIDsOrdered(self):
         for x in range(5000):
-            self.ordered.objectIds(spec='ATDocument')
+            [i for i in self.ordered.objectIds()]
 
     # basic content values -- read all
     @timecall
