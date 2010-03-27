@@ -99,7 +99,11 @@ class GopipIndex(StubIndex):
         else:
             # otherwise the entire map needs to be constructed...
             for rid, container, id in items:
-                pos[rid] = container.getObjectPosition(id)
+                if getattr(aq_base(container), 'getObjectPosition', None):
+                    pos[rid] = container.getObjectPosition(id)
+                else:
+                    # fallback for unordered folders
+                    pos[rid] = 0
             return pos
 
 
