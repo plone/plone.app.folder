@@ -3,6 +3,7 @@ from zope.event import notify
 from zope.lifecycleevent import ObjectCreatedEvent, ObjectModifiedEvent
 from AccessControl import ClassSecurityInfo
 from OFS.interfaces import IOrderedContainer
+from Products.Archetypes.atapi import BaseFolder
 from Products.ATContentTypes.config import PROJECTNAME
 from Products.ATContentTypes.content.base import registerATCT
 from Products.ATContentTypes.content.base import ATCTOrderedFolder
@@ -19,6 +20,12 @@ from plone.app.folder.bbb import folder_implements
 
 ATFolderSchema = ATContentTypeSchema.copy() + ConstrainTypesMixinSchema
 finalizeATCTSchema(ATFolderSchema, folderish=True, moveDiscussion=False)
+
+
+class UnorderedFolder(BaseFolder):
+
+    def SearchableText(self):
+        return ''
 
 
 class OrderableFolder(BaseBTreeFolder):

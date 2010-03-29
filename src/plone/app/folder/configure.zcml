@@ -6,7 +6,6 @@
 
     <five:registerPackage package="." initialize=".initialize" />
     <five:deprecatedManageAddDelete class=".folder.ATFolder" />
-    <five:deprecatedManageAddDelete class=".tests.content.NonBTreeFolder" />
 
     <include file="profiles.zcml" />
     <include package="plone.folder" />
