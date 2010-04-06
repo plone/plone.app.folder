@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.0b5 - Unreleased
-------------------
+1.0b5 - Released April 6, 2010
+------------------------------
 
 * Match ``getObjectPositionInParent`` behavior and handle unordered folders
   inside ordered folders shown in the navigation tree at the same time.
