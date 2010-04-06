@@ -77,4 +77,3 @@ class BTreeMigrationView(BrowserView):
         msg = msg % (processed, real.next(), cpu.next())
         log(msg)
         logger.info(msg)
-

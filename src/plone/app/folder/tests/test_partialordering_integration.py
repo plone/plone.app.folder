@@ -26,13 +26,13 @@ class PartialOrderingTests(IntegrationTestCase):
         self.assertRaises(ValueError, self.folder.getObjectPosition, 'bar')
 
     def testRemoveNonOrderableContent(self):
-        self.setRoles(('Manager',))
-        oid = self.folder.invokeFactory('Event', id='foo')
+        self.setRoles(['Manager'])
+        self.folder.invokeFactory('Event', id='foo')
         self.folder.manage_delObjects('foo')
         self.failIf(self.folder.hasObject('foo'), 'foo?')
 
     def testCreateOrderableContent(self):
-        self.setRoles(('Manager',))
+        self.setRoles(['Manager'])
         # create orderable content
         oid = self.folder.invokeFactory('Document', id='foo')
         self.assertEqual(oid, 'foo')

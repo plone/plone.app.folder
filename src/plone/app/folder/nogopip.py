@@ -49,7 +49,7 @@ class GopipIndex(StubIndex):
     implements(ISortIndex)
 
     meta_type = 'GopipIndex'
-    manage_options= (dict(label='Settings', action='manage_main'),)
+    manage_options= dict(label='Settings', action='manage_main'),
 
     keyForDocument = 42
 
@@ -108,6 +108,7 @@ class GopipIndex(StubIndex):
 
 
 manage_addGopipForm = DTMLFile('dtml/addGopipIndex', globals())
+
 
 def manage_addGopipIndex(self, id, REQUEST=None, RESPONSE=None, URL3=None):
     """ add a fake gopip index """

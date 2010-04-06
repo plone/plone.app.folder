@@ -6,4 +6,6 @@
     <five:deprecatedManageAddDelete class=".content.NonBTreeFolder" />
     <five:deprecatedManageAddDelete class=".content.UnorderedFolder" />
 
+    <include package="plone.app.folder" />
+
 </configure>

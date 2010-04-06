@@ -8,6 +8,7 @@ Changelog
   inside ordered folders shown in the navigation tree at the same time.
   [hannosch]
 
+
 1.0b4 - Released March 6, 2010
 ------------------------------
 

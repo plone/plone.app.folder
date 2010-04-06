@@ -30,14 +30,14 @@ class ATFolder(ATCTFolderMixin, BaseBTreeFolder):
 
     __implements__ = folder_implements
 
-    schema =  ATFolderSchema
+    schema = ATFolderSchema
     security = ClassSecurityInfo()
 
-    portal_type    = 'Folder'
+    portal_type = 'Folder'
     archetype_name = 'Folder'
     assocMimetypes = ()
-    assocFileExt   = ()
-    cmf_edit_kws   = ()
+    assocFileExt = ()
+    cmf_edit_kws = ()
 
     # Enable marshalling via WebDAV/FTP/ExternalEditor.
     __dav_marshall__ = True

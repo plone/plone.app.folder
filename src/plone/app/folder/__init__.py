@@ -4,7 +4,7 @@ from Products.CMFCore.permissions import setDefaultRoles
 packageName = __name__
 
 AddFolder = 'ATContentTypes: Add Folder'
-setDefaultRoles(AddFolder, ('Manager', 'Owner',))
+setDefaultRoles(AddFolder, ('Manager', 'Owner'))
 
 
 def initialize(context):

@@ -19,10 +19,8 @@ class IntegrationLayer(PloneSite):
         portal = root.plone
         # load zcml & install the package
         fiveconfigure.debug_mode = True
-        import plone.app.folder
-        import plone.app.folder.tests
-        load_config('configure.zcml', plone.app.folder)
-        load_config('configure.zcml', plone.app.folder.tests)
+        from plone.app.folder import tests
+        load_config('testing.zcml', tests)
         fiveconfigure.debug_mode = False
         installPackage('plone.app.folder', quiet=True)
         # import replacement profile

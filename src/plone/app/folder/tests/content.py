@@ -23,6 +23,7 @@ finalizeATCTSchema(ATFolderSchema, folderish=True, moveDiscussion=False)
 
 
 class UnorderedFolder(BaseFolder):
+    """ sample unordered (old-style) folder for testing purposes """
 
     def SearchableText(self):
         return ''

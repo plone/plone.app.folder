@@ -72,8 +72,8 @@ class TestMigrationHelpers(IntegrationTestCase):
 
     def testReverseMigrate(self):
         folder = create('Folder', self.portal, 'folder', title='Foo')
-        doc = create('Document', folder, 'doc1')
-        event = create('Event', folder, 'event1')
+        create('Document', folder, 'doc1')
+        create('Event', folder, 'event1')
         reverseMigrate(folder)
         btree = aq_base(self.portal.folder)
         self.failUnless(isinstance(btree, BTreeFolder))
@@ -156,7 +156,7 @@ class TestBTreeMigration(IntegrationTestCase):
         self.failUnless('migrating btree-based folders' in output[0])
         self.failUnless('intermediate commit' in output[-2])
         self.failUnless('processed' in output[-1])
-        paths = [ line.split('"')[1] for line in output[1:-2] ]
+        paths = [line.split('"')[1] for line in output[1:-2]]
         return paths
 
     def testMigrationView(self):
