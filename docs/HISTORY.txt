@@ -4,6 +4,10 @@ Changelog
 1.0b6 - Unreleased
 ------------------
 
+* Nogopip vs. Acquisition take two - not all folders have a getOrdering
+  method, so we need to avoid acquiring it.
+  [hannosch]
+
 
 1.0b5 - Released April 6, 2010
 ------------------------------

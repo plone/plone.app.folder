@@ -87,9 +87,10 @@ class GopipIndex(StubIndex):
         if len(containers) == 1:
             # the usual "all from one folder" case can be optimized
             folder = containers.values()[0]
-            try:
+            if getattr(aq_base(folder), 'getOrdering', None):
                 ids = folder.getOrdering().idsInOrder()
-            except AttributeError:          # site root or old folders...
+            else:
+                # site root or old folders
                 ids = folder.objectIds()
             for idx, id in enumerate(ids):
                 rid = rids.get(id)

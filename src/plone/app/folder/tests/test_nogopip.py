@@ -43,6 +43,15 @@ class NoGopipTests(IntegrationTestCase):
         ids = self.query(path=dict(query='/plone/foo1', depth=1))
         self.assertEqual(ids, ['bar2', 'bar1'])
 
+    def testSearchUnorderedFolderInFolder(self):
+        self.portal['foo']['foo1'] = UnorderedFolder('foo1')
+        base = self.portal.foo.foo1
+        base.reindexObject(idxs=['path', 'getObjPositionInParent'])
+        base.invokeFactory('Document', id='bar7')
+        base.invokeFactory('Document', id='bar6')
+        ids = self.query(path=dict(query='/plone/foo/foo1', depth=1))
+        self.assertEqual(ids, ['bar7', 'bar6'])
+
     def testSortUnorderedFolderInTree(self):
         self.portal.foo['foo1'] = UnorderedFolder('foo1')
         base = self.portal.foo.foo1
