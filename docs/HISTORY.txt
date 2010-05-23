@@ -4,6 +4,9 @@ Changelog
 1.0b7 - Unreleased
 ------------------
 
+* Updated tests to not rely on the existence of the Large Plone Folder type,
+  which was removed for Plone 4.
+  [davisagli]
 
 1.0b6 - Released May 2, 2010
 ----------------------------

@@ -105,8 +105,8 @@ Index extras/Products.ATContentTypes/Products/ATContentTypes/tests/test_installa
          # test that all types are installed well
          ttool = self.ttool
          ids = ('Document', 'Favorite', 'File',
--            'Folder', 'Image', 'Large Plone Folder', 'Link',
-+            'Image', 'Large Plone Folder', 'Link',
+-            'Folder', 'Image', 'Link',
++            'Image', 'Link',
              'News Item', 'Topic', 'Event')
  
          tids = ttool.objectIds()

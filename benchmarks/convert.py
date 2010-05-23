@@ -4,7 +4,7 @@ from fileinput import input
 from re import compile
 from sys import argv
 
-test = compile(r'^\s*test(.*)(Regular|Large|Ordered) \(')
+test = compile(r'^\s*test(.*)(Regular|Unordered|Ordered) \(')
 time = compile(r'([\d.]*) seconds$')
 
 bench = {}

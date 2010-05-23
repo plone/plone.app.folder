@@ -40,7 +40,8 @@ class TestBenchmarkCase(ptc.PloneTestCase):
                 obj.reindexObject(idxs=('Title', 'Description', 'SearchableText'))
 
             regular = createNonBTreeFolder('Folder', portal, 'regular')
-            large = _createObjectByType('Large Plone Folder', portal, 'large')
+            unordered = _createObjectByType('Folder', portal, 'unordered')
+            unordered.setOrdering(u'unordered')
             ordered = _createObjectByType('Folder', portal, 'ordered')
 
             @timecall
@@ -48,16 +49,16 @@ class TestBenchmarkCase(ptc.PloneTestCase):
                 for x in range(SIZE):
                     create(regular, x)
             @timecall
-            def testCreateContentLarge():
+            def testCreateContentUnordered():
                 for x in range(SIZE):
-                    create(large, x)
+                    create(unordered, x)
             @timecall
             def testCreateContentOrdered():
                 for x in range(SIZE):
                     create(ordered, x)
 
             testCreateContentRegular()
-            testCreateContentLarge()
+            testCreateContentUnordered()
             testCreateContentOrdered()
 
             commit()
@@ -69,7 +70,7 @@ class TestBenchmarkCase(ptc.PloneTestCase):
 
     def afterSetUp(self):
         self.regular = self.portal.regular
-        self.large = self.portal.large
+        self.unordered = self.portal.unordered
         self.ordered = self.portal.ordered
 
 
@@ -79,9 +80,9 @@ class TestBenchmarkCase(ptc.PloneTestCase):
         for x in range(5000):
             [i for i in self.regular.objectIds()]
     @timecall
-    def testObjectIDsLarge(self):
+    def testObjectIDsUnordered(self):
         for x in range(5000):
-            [i for i in self.large.objectIds()]
+            [i for i in self.unordered.objectIds()]
     @timecall
     def testObjectIDsOrdered(self):
         for x in range(5000):
@@ -93,9 +94,9 @@ class TestBenchmarkCase(ptc.PloneTestCase):
         for x in range(500):
             [obj for obj in self.regular.objectValues()]
     @timecall
-    def testObjectValuesLarge(self):
+    def testObjectValuesUnordered(self):
         for x in range(500):
-            [obj for obj in self.large.objectValues()]
+            [obj for obj in self.unordered.objectValues()]
     @timecall
     def testObjectValuesOrdered(self):
         for x in range(500):
@@ -108,10 +109,10 @@ class TestBenchmarkCase(ptc.PloneTestCase):
         for x in range(100 ** 2):
             self.regular.getObjectPosition(id)
     @timecall
-    def testObjectPositionLarge(self):
+    def testObjectPositionUnordered(self):
         id = 'doc.%d' % (SIZE / 2)
         for x in range(100 ** 2):
-            self.large.getObjectPosition(id)
+            self.unordered.getObjectPosition(id)
     @timecall
     def testObjectPositionOrdered(self):
         id = 'doc.%d' % (SIZE / 2)
@@ -125,9 +126,9 @@ class TestBenchmarkCase(ptc.PloneTestCase):
             batch = Batch(sequence=self.regular.objectValues(), size=SIZE / 10, start=SIZE * 4 / 5)
             [b for b in batch]
     @timecall
-    def testBatchLarge(self):
+    def testBatchUnordered(self):
         for x in range(500):
-            batch = Batch(sequence=self.large.objectValues(), size=SIZE / 10, start=SIZE * 4 / 5)
+            batch = Batch(sequence=self.unordered.objectValues(), size=SIZE / 10, start=SIZE * 4 / 5)
             [b for b in batch]
     @timecall
     def testBatchOrdered(self):
@@ -141,9 +142,9 @@ class TestBenchmarkCase(ptc.PloneTestCase):
         for x in range(1000):
             self.regular['doc.%d' % randint(0, SIZE-1)]
     @timecall
-    def testRandomLarge(self):
+    def testRandomUnordered(self):
         for x in range(1000):
-            self.large['doc.%d' % randint(0, SIZE-1)]
+            self.unordered['doc.%d' % randint(0, SIZE-1)]
     @timecall
     def testRandomOrdered(self):
         for x in range(1000):

@@ -4,6 +4,7 @@ from zope.component import getMultiAdapter
 from zope.publisher.browser import TestRequest
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base as BTreeFolder
 from Products.ATContentTypes.content.document import ATDocument
+from Products.CMFPlone.utils import _createObjectByType
 from plone.folder.interfaces import IOrderable, IOrdering
 from plone.app.folder.tests.base import IntegrationTestCase
 from plone.app.folder.tests.layer import IntegrationLayer
@@ -114,7 +115,7 @@ class TestMigrationHelpers(IntegrationTestCase):
 
     def testIsSaneBTreeFolder(self):
         # positive case
-        create('Large Plone Folder', self.portal, 'btree')
+        _createObjectByType('Folder', self.portal, 'btree')
         self.failUnless(isSaneBTreeFolder(self.portal.btree))
         # negative case
         create('Folder', self.portal, 'folder')
