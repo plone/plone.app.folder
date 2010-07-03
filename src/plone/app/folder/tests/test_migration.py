@@ -1,3 +1,5 @@
+import re
+
 from Acquisition import aq_base, aq_parent
 from zope.interface import classImplements
 from zope.component import getMultiAdapter
@@ -10,7 +12,7 @@ from plone.app.folder.tests.base import IntegrationTestCase
 from plone.app.folder.tests.layer import IntegrationLayer
 from plone.app.folder.tests.content import NonBTreeFolder, create
 from plone.app.folder.tests.content import OrderableFolder
-from plone.app.folder.migration import migrate
+from plone.app.folder.migration import BTreeMigrationView
 from plone.app.folder.utils import findObjects
 
 
@@ -145,28 +147,30 @@ class TestBTreeMigration(IntegrationTestCase):
     def testBTreeMigration(self):
         # create (unmigrated) btree folder
         folder = self.makeUnmigratedFolder(self.portal, 'test', title='Foo')
-        self.failUnless(migrate(folder))
+        view = BTreeMigrationView(self.portal, self.app.REQUEST)
+        self.failUnless(view.migrate(folder))
         folder = self.portal.test       # get the object again...
         self.failUnless(isSaneBTreeFolder(folder))
         self.assertEqual(folder.getId(), 'test')
         self.assertEqual(folder.Title(), 'Foo')
-        self.failIf(migrate(folder))    # a second migration should be skipped
+        # a second migration should be skipped
+        self.failIf(view.migrate(folder))
 
-    def getPaths(self, output):
+    def getNumber(self, output):
         self.failUnless(len(output) >= 3)
         self.failUnless('migrating btree-based folders' in output[0])
         self.failUnless('intermediate commit' in output[-2])
-        self.failUnless('processed' in output[-1])
-        paths = [line.split('"')[1] for line in output[1:-2]]
-        return paths
+        last = output[-1]
+        self.failUnless('processed' in last)
+        matches = re.match(r'.*processed (.*) object.*', last).groups()
+        return int(matches[0])
 
     def testMigrationView(self):
         folder = self.makeUnmigratedFolder(self.portal, 'test', title='Foo')
         view, headers, output, request = getView(folder, 'migrate-btrees')
         view()      # call the view, triggering the migration
-        paths = self.getPaths(output)
-        self.assertEqual(len(paths), 1)
-        self.assertEqual(paths, ['.'])          # printed paths are relative
+        num = self.getNumber(output)
+        self.assertEqual(num, 1)
         folder = self.portal.test               # get the object again...
         self.failUnless(isSaneBTreeFolder(folder))
         self.assertEqual(folder.getId(), 'test')
@@ -183,9 +187,8 @@ class TestBTreeMigration(IntegrationTestCase):
         # now test its migration...
         view, headers, output, request = getView(self.portal, 'migrate-btrees')
         view()      # call the view, triggering the migration
-        paths = self.getPaths(output)
-        self.assertEqual(len(paths), 1)
-        self.assertEqual(paths, ['test'])
+        num = self.getNumber(output)
+        self.assertEqual(num, 1)
         folder = self.portal.test               # get the object again...
         self.failUnless(isSaneBTreeFolder(folder))
         self.assertEqual(folder.getId(), 'test')
@@ -199,9 +202,8 @@ class TestBTreeMigration(IntegrationTestCase):
         self.makeUnmigratedFolder(self.portal, 'folder2')
         view, headers, output, request = getView(self.portal, 'migrate-btrees')
         view()      # call the view, triggering the migration
-        paths = self.getPaths(output)
-        self.assertEqual(len(paths), 2)
-        self.assertEqual(sorted(paths), ['folder1', 'folder2'])
+        num = self.getNumber(output)
+        self.assertEqual(num, 2)
         self.failUnless(isSaneBTreeFolder(self.portal.folder1))
         self.failUnless(isSaneBTreeFolder(self.portal.folder2))
 
@@ -215,9 +217,8 @@ class TestBTreeMigration(IntegrationTestCase):
         # start the migration
         view, headers, output, request = getView(self.portal, 'migrate-btrees')
         view()      # call the view, triggering the migration
-        paths = self.getPaths(output)
-        self.assertEqual(len(paths), 3)
-        self.assertEqual(sorted(paths), ['test', 'test/bar', 'test/foo'])
+        num = self.getNumber(output)
+        self.assertEqual(num, 3)
         self.failUnless(isSaneBTreeFolder(self.portal.test))
         self.failUnless(isSaneBTreeFolder(self.portal.test.foo))
         self.failUnless(isSaneBTreeFolder(self.portal.test.bar))
