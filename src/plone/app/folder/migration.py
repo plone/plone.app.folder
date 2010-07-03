@@ -62,14 +62,11 @@ class BTreeMigrationView(BrowserView):
             trx.note('migrated %d btree-folders' % processed)
             trx.savepoint()
         cpi = checkpointIterator(checkPoint, batch)
-        single = timer()        # real time for single object
         for path, obj in findObjects(self.context):
             if isinstance(obj, BTreeFolder):
                 if migrate(obj):
-                    log('migrated "%s" (%s).' % (path or '.', single.next()))
                     processed += 1
                     cpi.next()
-                    single.next()   # don't count commit time here...
         checkPoint()                # commit last batch
         if dryrun:
             get().abort()           # abort on test-run...
