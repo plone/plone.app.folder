@@ -37,16 +37,18 @@ class BTreeMigrationView(BrowserView):
         folder._initBTrees()        # create _tree, _count, _mt_index
         for info in folder._objects:
             name = info['id']
-            self.migrate_object(folder, name)
+            # _setOb will notify the ordering adapter itself,
+            # so we don't need to care about storing order information here...
+            folder._setOb(name, aq_base(getattr(folder, name)))
+            delattr(folder, name)
         if has('_objects'):
             delattr(folder, '_objects')
         return True
 
-    def migrate_object(self, folder, name):
-        # _setOb will notify the ordering adapter itself,
-        # so we don't need to care about storing order information here...
-        folder._setOb(name, aq_base(getattr(folder, name)))
-        delattr(folder, name)
+    def postprocess(self, obj):
+        # This is a hook for other migration code and is used in
+        # plone.app.upgrade
+        pass
 
     def __call__(self, batch=1000, dryrun=False):
         """ find all btree-based folder below the context, potentially
@@ -69,6 +71,8 @@ class BTreeMigrationView(BrowserView):
                 if self.migrate(obj):
                     processed += 1
                     cpi.next()
+            self.postprocess(obj)
+
         checkPoint()                # commit last batch
         if dryrun:
             get().abort()           # abort on test-run...
