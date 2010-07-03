@@ -4,6 +4,10 @@ Changelog
 1.0b8 - Unreleased
 ------------------
 
+* Moved migration logic into the BTreeMigrationView to allow subclasses to
+  override part of the logic.
+  [hannosch]
+
 * Remove the overly noisy migration report per folder.
   [hannosch]
 

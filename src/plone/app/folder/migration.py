@@ -9,27 +9,6 @@ from transaction import get
 logger = getLogger(__name__)
 
 
-def migrate(folder):
-    """ migrate existing data structure from a regular folder to a btree
-        folder;  the folder needs to be btree-based already """
-    folder = aq_base(folder)
-    assert isinstance(folder, BTreeFolder)
-    assert folder.getId()       # make sure the object is properly loaded
-    has = folder.__dict__.has_key
-    if has('_tree') and not has('_objects'):
-        return False            # already migrated...
-    folder._initBTrees()        # create _tree, _count, _mt_index
-    for info in folder._objects:
-        name = info['id']
-        # _setOb will notify the ordering adapter itself,
-        # so we don't need to care about storing order information here...
-        folder._setOb(name, aq_base(getattr(folder, name)))
-        delattr(folder, name)
-    if has('_objects'):
-        delattr(folder, '_objects')
-    return True
-
-
 class BTreeMigrationView(BrowserView):
     """ helper view for btree-migration;  all old-style folder, which
         are btree-based now (implementation-wise) will be migration
@@ -45,6 +24,29 @@ class BTreeMigrationView(BrowserView):
                 msg += '\n'
             write(msg)
         return log
+
+    def migrate(self, folder):
+        """ migrate existing data structure from a regular folder to a btree
+            folder;  the folder needs to be btree-based already """
+        folder = aq_base(folder)
+        assert isinstance(folder, BTreeFolder)
+        assert folder.getId()       # make sure the object is properly loaded
+        has = folder.__dict__.has_key
+        if has('_tree') and not has('_objects'):
+            return False            # already migrated...
+        folder._initBTrees()        # create _tree, _count, _mt_index
+        for info in folder._objects:
+            name = info['id']
+            self.migrate_object(folder, name)
+        if has('_objects'):
+            delattr(folder, '_objects')
+        return True
+
+    def migrate_object(self, folder, name):
+        # _setOb will notify the ordering adapter itself,
+        # so we don't need to care about storing order information here...
+        folder._setOb(name, aq_base(getattr(folder, name)))
+        delattr(folder, name)
 
     def __call__(self, batch=1000, dryrun=False):
         """ find all btree-based folder below the context, potentially
@@ -64,7 +66,7 @@ class BTreeMigrationView(BrowserView):
         cpi = checkpointIterator(checkPoint, batch)
         for path, obj in findObjects(self.context):
             if isinstance(obj, BTreeFolder):
-                if migrate(obj):
+                if self.migrate(obj):
                     processed += 1
                     cpi.next()
         checkPoint()                # commit last batch
