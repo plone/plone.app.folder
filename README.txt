@@ -29,4 +29,3 @@ This can be resolved by adding this line to your functional test source::
 
     from plone.app.folder.tests import bbb
 
-
