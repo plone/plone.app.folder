@@ -33,6 +33,7 @@ setup(name = 'plone.app.folder',
       platforms = 'Any',
       zip_safe = False,
       install_requires = [
+          'Plone',
           'setuptools',
           'plone.folder',
       ],
