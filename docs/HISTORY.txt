@@ -4,6 +4,10 @@ Changelog
 1.0.2 - unreleased
 ------------------
 
+- Show the next **viewable** item in next/previous
+  viewlet/link, as the behaviour was in Plone 3.
+  This fixes #10309
+  [mr_savage]
 
 1.0.1 - 2010-07-18
 ------------------

@@ -1,5 +1,6 @@
 from zope.interface import implements
 from zope.component import adapts
+from AccessControl import getSecurityManager
 from Products.CMFCore.utils import getToolByName
 from plone.app.layout.nextprevious.interfaces import INextPreviousProvider
 from plone.app.folder.folder import IATUnifiedFolder
@@ -14,6 +15,13 @@ class NextPrevious(object):
         self.context = context
         props = getToolByName(context, 'portal_properties').site_properties
         self.vat = props.getProperty('typesUseViewActionInListings', ())
+        self.security = getSecurityManager()
+        order = context.getOrdering()
+        if type(order) != list:
+            order = order.idsInOrder()
+        if type(order) != list:
+            order = None
+        self.order = order
 
     @property
     def enabled(self):
@@ -21,31 +29,31 @@ class NextPrevious(object):
 
     def getNextItem(self, obj):
         """ return info about the next item in the container """
-        pos = self.context.getObjectPosition(obj.getId())
-        ordering = self.context.getOrdering()
-        try:
-            try:                # first try `__getitem__`
-                next = ordering[pos + 1]
-            except TypeError:
-                next = ordering.idsInOrder()[pos + 1]
-            return self.getData(self.context[next])
-        except IndexError:      # in case next > len(folder)
+        if not self.order:
             return None
+        pos = self.context.getObjectPosition(obj.getId())
+        for oid in self.order[pos+1:]:
+            data = self.getData(self.context[oid])
+            if data:
+                return data
+                break
 
     def getPreviousItem(self, obj):
         """ return info about the previous item in the container """
-        pos = self.context.getObjectPosition(obj.getId())
-        ordering = self.context.getOrdering()
-        if pos > 0:
-            try:                # first try `__getitem__`
-                prev = ordering[pos - 1]
-            except TypeError:
-                prev = ordering.idsInOrder()[pos - 1]
-            return self.getData(self.context[prev])
-        return None
+        if not self.order:
+            return None
+        order_reversed = list(reversed(self.order))
+        pos = order_reversed.index(obj.getId())
+        for oid in order_reversed[pos+1:]:
+            data = self.getData(self.context[oid])
+            if data:
+                return data
+                break
 
     def getData(self, obj):
         """ return the expected mapping, see `INextPreviousProvider` """
+        if not self.security.checkPermission('View', obj):
+            return None
         ptype = obj.portal_type
         url = obj.absolute_url()
         if ptype in self.vat:       # "use view action in listings"

@@ -2,6 +2,7 @@ from plone.app.layout.nextprevious.interfaces import INextPreviousProvider
 from plone.app.folder.tests.base import IntegrationTestCase
 from plone.app.folder.tests.layer import IntegrationLayer
 
+from Products.CMFCore.utils import getToolByName
 
 class NextPreviousSupportTests(IntegrationTestCase):
     """ basic use cases and tests for next/previous navigation, essentially
@@ -10,6 +11,8 @@ class NextPreviousSupportTests(IntegrationTestCase):
     layer = IntegrationLayer
 
     def afterSetUp(self):
+        self.wf = getToolByName(self.portal, "portal_workflow")
+        self.portal.acl_users._doAddUser('user_std', 'secret', ['Member'], [])
         self.setRoles(['Manager'])
         self.portal.invokeFactory('Document', 'doc1')
         self.portal.invokeFactory('Document', 'doc2')
@@ -83,6 +86,49 @@ class NextPreviousSupportTests(IntegrationTestCase):
         next = adapter.getNextItem(container.subDoc5)
         self.assertEqual(next, None)
 
+    def testNextItemOnlyShowViewable(self):
+        container = self.folder[self.folder.invokeFactory('Folder', 'case3')]
+        # create objects [subDoc1,subDoc2,subDoc3,subDoc4,subDoc5,subDoc6]
+        # published objects [subDoc2, subDoc4, subDoc5]
+        self.setRoles(("Manager",))
+        for id in range(1, 7):
+            doc = container[container.invokeFactory('Document', 'subDoc%d' % id)]
+            if id in [2,4,5]:
+                self.wf.doActionFor(doc, "publish")
+
+        # Member should only see the published items
+        self.logout()
+        self.login('user_std')
+        adapter = INextPreviousProvider(container)
+        # text data for next/tems
+        next = adapter.getNextItem(container.subDoc2)
+        self.assertEqual(next['id'], 'subDoc4')
+        next = adapter.getNextItem(container.subDoc4)
+        self.assertEqual(next['id'], 'subDoc5')
+        next = adapter.getNextItem(container.subDoc5)
+        self.assertEqual(next, None)
+
+    def testPreviousItemOnlyShowViewable(self):
+        container = self.folder[self.folder.invokeFactory('Folder', 'case3')]
+        # create objects [subDoc1,subDoc2,subDoc3,subDoc4,subDoc5,subDoc6]
+        # published objects [subDoc2, subDoc4, subDoc5]
+        self.setRoles(("Manager",))
+        for id in range(1, 7):
+            doc = container[container.invokeFactory('Document', 'subDoc%d' % id)]
+            if id in [2,4,5]:
+                self.wf.doActionFor(doc, "publish")
+
+        # Member should only see the published items
+        self.logout()
+        self.login('user_std')
+        adapter = INextPreviousProvider(container)
+        # text data for next/tems
+        previous = adapter.getPreviousItem(container.subDoc5)
+        self.assertEqual(previous['id'], 'subDoc4')
+        previous = adapter.getPreviousItem(container.subDoc4)
+        self.assertEqual(previous['id'], 'subDoc2')
+        previous = adapter.getPreviousItem(container.subDoc2)
+        self.assertEqual(previous, None)
 
 def test_suite():
     from unittest import defaultTestLoader
