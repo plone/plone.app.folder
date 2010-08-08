@@ -35,14 +35,14 @@ def reverseMigrate(folder):
 def isSaneBTreeFolder(folder):
     """ sanity-check the given btree folder """
     folder = aq_base(folder)
-    has = folder.__dict__.has_key
-    state = isinstance(folder, BTreeFolder) and has('_tree') \
-        and not has('_objects')     # it's a class variable
+    contains = folder.__dict__.__contains__
+    state = isinstance(folder, BTreeFolder) and contains('_tree') \
+        and not contains('_objects')     # it's a class variable
     if state:
         try:
             # objects must not live directly on the folder (but in the btree)
             for oid in folder.objectIds():
-                if not hasattr(folder, oid) or has(oid):
+                if not hasattr(folder, oid) or contains(oid):
                     return False
         except AttributeError:
             return False
@@ -80,9 +80,9 @@ class TestMigrationHelpers(IntegrationTestCase):
         reverseMigrate(folder)
         btree = aq_base(self.portal.folder)
         self.failUnless(isinstance(btree, BTreeFolder))
-        self.failUnless(btree.__dict__.has_key('_objects'))
+        self.failUnless('_objects' in btree.__dict__)
         self.failUnless(hasattr(btree, '_tree'))
-        self.failIf(btree.__dict__.has_key('_tree'))
+        self.failIf('_tree' in btree.__dict__)
         self.assertEqual(btree._tree, None)
         # please note that the default adapter returns empty lists here
         # while the partial one raises `AttributeErrors`
@@ -100,18 +100,18 @@ class TestMigrationHelpers(IntegrationTestCase):
         reverseMigrate(folder)
         foo = aq_base(self.portal.foo)
         self.failUnless(isinstance(foo, BTreeFolder))
-        self.failUnless(foo.__dict__.has_key('_objects'))
+        self.failUnless('_objects' in foo.__dict__)
         self.failUnless(hasattr(foo, '_tree'))
-        self.failIf(foo.__dict__.has_key('_tree'))
+        self.failIf('_tree' in foo.__dict__)
         self.assertEqual(foo._tree, None)
         self.assertEqual(foo._objects,
-            (dict(id='bar', meta_type='NonBTreeFolder'),))
+            (dict(id='bar', meta_type='NonBTreeFolder'), ))
         bar = aq_base(getattr(foo, 'bar'))
         self.failUnless(isinstance(bar, BTreeFolder))
-        self.failIf(bar.__dict__.has_key('_objects'))   # no sub-objects
+        self.failIf('_objects' in bar.__dict__)   # no sub-objects
         self.assertEqual(bar._objects, ())
         self.failUnless(hasattr(bar, '_tree'))
-        self.failIf(bar.__dict__.has_key('_tree'))
+        self.failIf('_tree' in bar.__dict__)
         self.assertEqual(bar._tree, None)
         self.assertEqual(bar._objects, ())
 
