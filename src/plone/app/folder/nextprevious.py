@@ -36,7 +36,6 @@ class NextPrevious(object):
             data = self.getData(self.context[oid])
             if data:
                 return data
-                break
 
     def getPreviousItem(self, obj):
         """ return info about the previous item in the container """
@@ -48,7 +47,6 @@ class NextPrevious(object):
             data = self.getData(self.context[oid])
             if data:
                 return data
-                break
 
     def getData(self, obj):
         """ return the expected mapping, see `INextPreviousProvider` """
