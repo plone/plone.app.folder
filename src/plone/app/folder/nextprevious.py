@@ -17,9 +17,9 @@ class NextPrevious(object):
         self.vat = props.getProperty('typesUseViewActionInListings', ())
         self.security = getSecurityManager()
         order = context.getOrdering()
-        if type(order) != list:
+        if not isinstance(order, list):
             order = order.idsInOrder()
-        if type(order) != list:
+        if not isinstance(order, list):
             order = None
         self.order = order
 
