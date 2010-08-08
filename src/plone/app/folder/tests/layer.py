@@ -1,13 +1,21 @@
 from zope.component import provideAdapter
 
 from Testing.ZopeTestCase import app, close, installPackage
-from Products.Five import fiveconfigure
-from Products.Five.zcml import load_config
 from Products.CMFCore.utils import getToolByName
 from Products.PloneTestCase.layer import PloneSite
 from transaction import commit
 
 from plone.folder.partial import PartialOrdering
+
+# BBB Zope 2.12
+try:
+    from Zope2.App.zcml import load_config
+    load_config # pyflakes
+    from OFS import metaconfigure
+    metaconfigure # pyflakes
+except ImportError:
+    from Products.Five.zcml import load_config
+    from Products.Five import fiveconfigure as metaconfigure
 
 
 class IntegrationLayer(PloneSite):
@@ -18,10 +26,10 @@ class IntegrationLayer(PloneSite):
         root = app()
         portal = root.plone
         # load zcml & install the package
-        fiveconfigure.debug_mode = True
+        metaconfigure.debug_mode = True
         from plone.app.folder import tests
         load_config('testing.zcml', tests)
-        fiveconfigure.debug_mode = False
+        metaconfigure.debug_mode = False
         installPackage('plone.app.folder', quiet=True)
         # import replacement profile
         profile = 'profile-plone.app.folder:default'

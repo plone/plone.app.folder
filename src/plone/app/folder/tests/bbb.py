@@ -2,7 +2,14 @@
 # ATContentTypes and CMFPlone
 
 from Testing.ZopeTestCase import installProduct, installPackage
-from Products.Five.zcml import load_config
+
+# BBB Zope 2.12
+try:
+    from Zope2.App.zcml import load_config
+    load_config # pyflakes
+except ImportError:
+    from Products.Five.zcml import load_config
+
 from Products.Five import fiveconfigure
 
 installProduct('Five', quiet=True)

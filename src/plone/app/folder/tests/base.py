@@ -1,6 +1,11 @@
-from Products.Five.testbrowser import Browser
 from Products.PloneTestCase import PloneTestCase as ptc
 
+# BBB Zope 2.12
+try:
+    from Testing.testbrowser import Browser
+    Browser # pyflakes
+except ImportError:
+    from Products.Five.testbrowser import Browser
 
 ptc.setupPloneSite()
 
