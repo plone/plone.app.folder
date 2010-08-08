@@ -6,7 +6,8 @@ from Products.ATContentTypes.interface import IATBTreeFolder
 from Products.ATContentTypes.content.schemata import ATContentTypeSchema
 from Products.ATContentTypes.content.schemata import NextPreviousAwareSchema
 from Products.ATContentTypes.content.schemata import finalizeATCTSchema
-from Products.ATContentTypes.lib.constraintypes import ConstrainTypesMixinSchema
+from Products.ATContentTypes.lib.constraintypes import \
+    ConstrainTypesMixinSchema
 from Products.ATContentTypes.content.base import ATCTFolderMixin
 from Products.ATContentTypes.content.base import registerATCT
 
@@ -16,7 +17,8 @@ from plone.app.folder.bbb import IArchivable, IPhotoAlbumAble
 from plone.app.folder.bbb import folder_implements
 
 
-ATFolderSchema = ATContentTypeSchema.copy() + ConstrainTypesMixinSchema.copy() + NextPreviousAwareSchema.copy()
+ATFolderSchema = ATContentTypeSchema.copy() + \
+    ConstrainTypesMixinSchema.copy() + NextPreviousAwareSchema.copy()
 finalizeATCTSchema(ATFolderSchema, folderish=True, moveDiscussion=False)
 
 
