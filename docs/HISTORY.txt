@@ -4,9 +4,12 @@ Changelog
 1.0.2 - unreleased
 ------------------
 
+- Adjust tests to work with Zope 2.13.
+  [hannosch]
+
 - Show the next **viewable** item in next/previous
   viewlet/link, as the behaviour was in Plone 3.
-  This fixes #10309
+  This fixes http://dev.plone.org/plone/ticket/10309.
   [mr_savage]
 
 1.0.1 - 2010-07-18

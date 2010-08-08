@@ -86,8 +86,12 @@ class TestMigrationHelpers(IntegrationTestCase):
         self.assertEqual(btree._tree, None)
         # please note that the default adapter returns empty lists here
         # while the partial one raises `AttributeErrors`
-        self.assertEqual(list(btree.objectValues()), [])
-        self.assertEqual(list(btree.objectIds()), [])
+        try:
+            self.assertEqual(list(btree.objectValues()), [])
+            self.assertEqual(list(btree.objectIds()), [])
+        except AttributeError:
+            # BBB In Zope 2.13 this always raises AttributeError
+            pass
         self.assertEqual(btree._objects,
             (dict(id='doc1', meta_type='ATDocument'),
             (dict(id='event1', meta_type='ATEvent'))))
