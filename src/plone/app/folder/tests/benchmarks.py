@@ -1,6 +1,6 @@
 # simple benchmarking tests related to plip191
 # to run individual tests using:
-# $ bin/instance test -s plone.app.folder --tests-pattern=benchmarks -t <testName>
+# $ bin/test -s plone.app.folder --tests-pattern=benchmarks -t <testName>
 # where <testName> is something like "testObjectValuesOrdered"
 
 from unittest import defaultTestLoader, main
