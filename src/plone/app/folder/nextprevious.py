@@ -2,6 +2,7 @@ from zope.interface import implements
 from zope.component import adapts
 from AccessControl import getSecurityManager
 from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.interfaces import IContentish
 from plone.app.layout.nextprevious.interfaces import INextPreviousProvider
 from plone.app.folder.folder import IATUnifiedFolder
 
@@ -52,6 +53,11 @@ class NextPrevious(object):
         """ return the expected mapping, see `INextPreviousProvider` """
         if not self.security.checkPermission('View', obj):
             return None
+        elif not IContentish.providedBy(obj):
+            # do not return a not contentish object
+            # such as a local workflow policy for example (#11234)
+            return None
+
         ptype = obj.portal_type
         url = obj.absolute_url()
         if ptype in self.vat:       # "use view action in listings"

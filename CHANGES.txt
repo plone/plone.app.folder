@@ -4,6 +4,10 @@ Changelog
 1.0.3 - unreleased
 ------------------
 
+- Next/previous folder adapter should not return not contentish objects,
+  such as local workflow policies as example.
+  This fixes http://dev.plone.org/plone/ticket/11234.
+  [thomasdesvenain]
 
 1.0.2 - 2010-08-08
 ------------------

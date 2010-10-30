@@ -67,8 +67,14 @@ class NextPreviousSupportTests(IntegrationTestCase):
 
     def testNextPreviousItems(self):
         container = self.folder[self.folder.invokeFactory('Folder', 'case3')]
-        for id in range(1, 6):
+        for id in range(1, 4):
             container.invokeFactory('Document', 'subDoc%d' % id)
+            
+        container.manage_addProduct['PythonScripts'].manage_addPythonScript(
+                                                        'notacontentishtype')
+        for id in range(5, 6):
+            container.invokeFactory('Document', 'subDoc%d' % id)
+
         adapter = INextPreviousProvider(container)
         # text data for next/previous items
         next = adapter.getNextItem(container.subDoc2)
@@ -79,6 +85,14 @@ class NextPreviousSupportTests(IntegrationTestCase):
         self.assertEqual(previous['id'], 'subDoc1')
         self.assertEqual(previous['portal_type'], 'Document')
         self.assertEqual(previous['url'], container.subDoc1.absolute_url())
+
+        # #11234 not contentish contents shouldn't be returned
+        # as next or previous content
+        next = adapter.getNextItem(container.subDoc3)
+        self.assertEqual(next['id'], 'subDoc5')
+        previous = adapter.getPreviousItem(container.subDoc5)
+        self.assertEqual(previous['id'], 'subDoc3')
+
         # first item should not have a previous item
         previous = adapter.getPreviousItem(container.subDoc1)
         self.assertEqual(previous, None)
