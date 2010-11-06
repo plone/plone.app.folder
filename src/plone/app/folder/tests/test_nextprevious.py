@@ -69,9 +69,10 @@ class NextPreviousSupportTests(IntegrationTestCase):
         container = self.folder[self.folder.invokeFactory('Folder', 'case3')]
         for id in range(1, 4):
             container.invokeFactory('Document', 'subDoc%d' % id)
-            
-        container.manage_addProduct['PythonScripts'].manage_addPythonScript(
-                                                        'notacontentishtype')
+
+        from OFS.Folder import manage_addFolder
+        manage_addFolder(container, 'notacontentishtype')
+
         for id in range(5, 6):
             container.invokeFactory('Document', 'subDoc%d' % id)
 
