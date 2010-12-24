@@ -32,7 +32,7 @@ setup(name = 'plone.app.folder',
       platforms = 'Any',
       zip_safe = False,
       install_requires = [
-          'Plone',
+          'Products.CMFPlone',
           'setuptools',
           'plone.folder',
       ],
