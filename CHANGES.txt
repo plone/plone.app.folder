@@ -4,11 +4,13 @@ Changelog
 1.0.5 - Unreleased
 ------------------
 
+
 1.0.4 - 2011-01-03
 ------------------
 
 - Depend on ``Products.CMFPlone`` instead of ``Plone``.
   [elro]
+
 
 1.0.3 - 2010-11-06
 ------------------
@@ -18,16 +20,18 @@ Changelog
   This fixes http://dev.plone.org/plone/ticket/11234.
   [thomasdesvenain]
 
+
 1.0.2 - 2010-08-08
 ------------------
 
 - Adjust tests to work with Zope 2.13 and avoid deprecation warnings.
   [hannosch]
 
-- Show the next **viewable** item in next/previous
+- Show the next **viewable*- item in next/previous
   viewlet/link, as the behaviour was in Plone 3.
   This fixes http://dev.plone.org/plone/ticket/10309.
   [mr_savage]
+
 
 1.0.1 - 2010-07-18
 ------------------
@@ -35,94 +39,97 @@ Changelog
 - Update license to GPL version 2 only.
   [hannosch]
 
+
 1.0 - 2010-07-07
 ----------------
 
-* Moved migration logic into the BTreeMigrationView to allow subclasses to
+- Moved migration logic into the BTreeMigrationView to allow subclasses to
   override part of the logic.
   [hannosch]
 
-* Remove the overly noisy migration report per folder.
+- Remove the overly noisy migration report per folder.
   [hannosch]
 
-1.0b7 - Released June 3, 2010
------------------------------
 
-* Updated tests to not rely on the existence of the Large Plone Folder type,
+1.0b7 - 2010-06-03
+------------------
+
+- Updated tests to not rely on the existence of the Large Plone Folder type,
   which was removed for Plone 4.
   [davisagli]
 
-1.0b6 - Released May 2, 2010
-----------------------------
 
-* Nogopip vs. Acquisition take two - not all folders have a getOrdering
+1.0b6 - 2010-05-02
+------------------
+
+- Nogopip vs. Acquisition take two - not all folders have a getOrdering
   method, so we need to avoid acquiring it.
   [hannosch]
 
 
-1.0b5 - Released April 6, 2010
-------------------------------
+1.0b5 - 2010-04-06
+------------------
 
-* Match ``getObjectPositionInParent`` behavior and handle unordered folders
+- Match ``getObjectPositionInParent`` behavior and handle unordered folders
   inside ordered folders shown in the navigation tree at the same time.
   [hannosch]
 
 
-1.0b4 - Released March 6, 2010
-------------------------------
+1.0b4 - 2010-03-06
+------------------
 
-* Don't try to store an acquisition-wrapped catalog on the positional index.
+- Don't try to store an acquisition-wrapped catalog on the positional index.
   [hannosch]
 
 
-1.0b3 - Released February 18, 2010
-----------------------------------
+1.0b3 - 2010-02-18
+------------------
 
-* Only apply monkey patch for `reindexOnReorder` on Plone 3.x & shortcut
+- Only apply monkey patch for `reindexOnReorder` on Plone 3.x & shortcut
   indexing completely if the fake index has been installed.
   [witsch]
 
-* Replace monkey patch for `Catalog._getSortIndex` with a fake index that
+- Replace monkey patch for `Catalog._getSortIndex` with a fake index that
   can sort search results according to their position in the container.
   [witsch]
 
-* Add optimization for sorting results by folder position for the usual
+- Add optimization for sorting results by folder position for the usual
   "all results in one folder" case.
   [witsch]
 
-* Add adapter for previous/next support that doesn't need the catalog.
+- Add adapter for previous/next support that doesn't need the catalog.
   [witsch]
 
-* Remove `getObjPositionInParent` catalog index and use a sort index based
+- Remove `getObjPositionInParent` catalog index and use a sort index based
   on the folder's order information instead.
   [witsch]
 
 
-1.0b2 - Released January 28, 2010
----------------------------------
+1.0b2 - 2010-01-28
+------------------
 
-* Add `IATBTreeFolder` to `implements` list of `ATFolder` replacement.
+- Add `IATBTreeFolder` to `implements` list of `ATFolder` replacement.
   [thet]
 
 
-1.0b1 - Released Nov 15, 2009
------------------------------
+1.0b1 - 2009-11-15
+------------------
 
-* Copy the `index_html` method from `ATContentTypes` to better support WebDAV.
+- Copy the `index_html` method from `ATContentTypes` to better support WebDAV.
   [davisagli]
 
-* Add in-place migration code.
+- Add in-place migration code.
   [witsch]
 
-* Work around imports no longer present in Plone 4.0.
+- Work around imports no longer present in Plone 4.0.
   [witsch]
 
-* (Briefly) document the `plone.app.folder.tests.bbb` usage.
+- Briefly document the `plone.app.folder.tests.bbb` usage.
   [wichert]
 
 
-1.0a1 - Released May 7, 2009
-----------------------------
+1.0a1 - 2009-05-07
+------------------
 
-* Initial release as factored out from `plone.folder`.
+- Initial release as factored out from `plone.folder`.
   [witsch]
