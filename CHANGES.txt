@@ -27,7 +27,7 @@ Changelog
 - Adjust tests to work with Zope 2.13 and avoid deprecation warnings.
   [hannosch]
 
-- Show the next **viewable*- item in next/previous
+- Show the next **viewable** item in next/previous
   viewlet/link, as the behaviour was in Plone 3.
   This fixes http://dev.plone.org/plone/ticket/10309.
   [mr_savage]
