@@ -1,5 +1,6 @@
 from Products.CMFCore.utils import getToolByName
 from plone.app.folder.nogopip import GopipIndex
+import pkg_resources
 
 
 # monkey patch for Plone 3.x:
@@ -18,9 +19,10 @@ def reindexOnReorder(self, parent):
 
 def applyPatches():
     try:
-        from plone.app import upgrade       # is this plone 4?
-        upgrade                             # make pyflakes happy :p
-    except ImportError:
+        # Plone 4 or higher
+        pkg_resources.get_distribution('plone.app.upgrade')
+    except pkg_resources.DistributionNotFound:
+        # Patch is only needed on Plone 3
         from Products.CMFPlone.PloneTool import PloneTool
         PloneTool.__nogopip_old_reindexOnReorder = PloneTool.reindexOnReorder
         PloneTool.reindexOnReorder = reindexOnReorder

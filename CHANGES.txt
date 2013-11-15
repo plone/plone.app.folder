@@ -4,7 +4,9 @@ Changelog
 1.0.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix test for Plone 4, so we really only apply the reindexOnReorder
+  patch when we are on Plone 3.
+  [maurits]
 
 
 1.0.5 (2013-01-13)
