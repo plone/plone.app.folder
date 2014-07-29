@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 version = '1.0.7.dev0'
 
-readme = open('README.txt').read()
-history = open('CHANGES.txt').read()
+readme = open('README.rst').read()
+history = open('CHANGES.rst').read()
 
 setup(name = 'plone.app.folder',
       version = version,
