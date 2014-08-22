@@ -10,12 +10,12 @@
     <include package="plone.folder" />
 
     <configure zcml:condition="installed Products.ATContentTypes">
-    
+
       <five:deprecatedManageAddDelete
         class=".folder.ATFolder" />
 
       <adapter factory=".nextprevious.NextPrevious" />
-    
+
     </configure>
 
     <browser:page
