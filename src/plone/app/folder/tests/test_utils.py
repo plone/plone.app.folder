@@ -1,6 +1,7 @@
-from unittest import defaultTestLoader, main
+# -*- coding: utf-8 -*-
 from Testing import ZopeTestCase as ztc
 from plone.app.folder.utils import findObjects
+from unittest import defaultTestLoader, main
 
 
 class UtilsTests(ztc.ZopeTestCase):
@@ -16,8 +17,10 @@ class UtilsTests(ztc.ZopeTestCase):
         self.portal.bar.manage_addFolder(id='foo', title='Foo')
         self.portal.bar.foo.manage_addDocument(id='doc2', title='a document')
         self.portal.bar.foo.manage_addDocument(id='file2', title='a file')
-        self.good = ('bar', 'bar/foo', 'bar/foo/doc2', 'bar/foo/file2',
-            'foo', 'foo/bar', 'foo/bar/doc1', 'foo/bar/file1')
+        self.good = (
+            'bar', 'bar/foo', 'bar/foo/doc2', 'bar/foo/file2',
+            'foo', 'foo/bar', 'foo/bar/doc1', 'foo/bar/file1'
+        )
 
     def ids(self, results):
         return tuple(sorted([r[0] for r in results]))

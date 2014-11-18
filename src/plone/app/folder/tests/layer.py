@@ -1,18 +1,19 @@
-from zope.component import provideAdapter
-
-from Testing.ZopeTestCase import app, close, installPackage
+# -*- coding: utf-8 -*-
 from Products.CMFCore.utils import getToolByName
 from Products.PloneTestCase.layer import PloneSite
-from transaction import commit
-
+from Testing.ZopeTestCase import app
+from Testing.ZopeTestCase import close
+from Testing.ZopeTestCase import installPackage
 from plone.folder.partial import PartialOrdering
+from transaction import commit
+from zope.component import provideAdapter
 
 # BBB Zope 2.12
 try:
     from Zope2.App.zcml import load_config
-    load_config # pyflakes
+    load_config  # pyflakes
     from OFS import metaconfigure
-    metaconfigure # pyflakes
+    metaconfigure  # pyflakes
 except ImportError:
     from Products.Five.zcml import load_config
     from Products.Five import fiveconfigure as metaconfigure
