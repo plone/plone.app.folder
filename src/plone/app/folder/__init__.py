@@ -37,12 +37,12 @@ def initialize(context):
                 fti = (fti,),
             ).initialize(context)
 
-    # from plone.app.folder import nogopip
+    from plone.app.folder import nogopip
 
-    # context.registerClass(
-    #     nogopip.GopipIndex,
-    #     permission='Add Pluggable Index',
-    #     constructors=(nogopip.manage_addGopipForm,
-    #                   nogopip.manage_addGopipIndex),
-    #     icon='www/index.gif',
-    #     visibility=None)
+    context.registerClass(
+        nogopip.GopipIndex,
+        permission='Add Pluggable Index',
+        constructors=(nogopip.manage_addGopipForm,
+                      nogopip.manage_addGopipIndex),
+        icon='www/index.gif',
+        visibility=None)
