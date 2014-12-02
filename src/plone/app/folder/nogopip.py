@@ -111,10 +111,11 @@ class GopipIndex(StubIndex):
 manage_addGopipForm = DTMLFile('dtml/addGopipIndex', globals())
 
 
-def manage_addGopipIndex(self, iid, REQUEST=None, RESPONSE=None, URL3=None):
+def manage_addGopipIndex(self, identifier, REQUEST=None, RESPONSE=None,
+    URL3=None):
     """ add a fake gopip index """
     return self.manage_addIndex(
-        iid,
+        identifier,
         'GopipIndex',
         REQUEST=REQUEST,
         RESPONSE=RESPONSE,
