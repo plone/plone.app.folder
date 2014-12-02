@@ -1,20 +1,20 @@
-from logging import getLogger
-from inspect import currentframe
-from zope.interface import implements
-from zope.component import getUtility
+# -*- coding: utf-8 -*-
 from Acquisition import aq_base
 from App.special_dtml import DTMLFile
 from OFS.SimpleItem import SimpleItem
-from Products.PluginIndexes.interfaces import IPluggableIndex, ISortIndex
 from Products.CMFCore.interfaces import ISiteRoot
-
+from Products.PluginIndexes.interfaces import IPluggableIndex, ISortIndex
+from inspect import currentframe
+from logging import getLogger
+from zope.component import getUtility
+from zope.interface import implementer
 
 logger = getLogger(__name__)
 
 
+@implementer(IPluggableIndex)
 class StubIndex(SimpleItem):
     """ stub catalog index doing nothing """
-    implements(IPluggableIndex)
 
     def __init__(self, id, *args, **kw):
         self.id = id
@@ -44,12 +44,12 @@ class StubIndex(SimpleItem):
         pass
 
 
+@implementer(ISortIndex)
 class GopipIndex(StubIndex):
     """ fake index for sorting against `getObjPositionInParent` """
-    implements(ISortIndex)
 
     meta_type = 'GopipIndex'
-    manage_options= dict(label='Settings', action='manage_main'),
+    manage_options = dict(label='Settings', action='manage_main'),
 
     keyForDocument = 42
 
@@ -111,7 +111,13 @@ class GopipIndex(StubIndex):
 manage_addGopipForm = DTMLFile('dtml/addGopipIndex', globals())
 
 
-def manage_addGopipIndex(self, id, REQUEST=None, RESPONSE=None, URL3=None):
+def manage_addGopipIndex(self, identifier, REQUEST=None, RESPONSE=None,
+    URL3=None):
     """ add a fake gopip index """
-    return self.manage_addIndex(id, 'GopipIndex',
-                REQUEST=REQUEST, RESPONSE=RESPONSE, URL1=URL3)
+    return self.manage_addIndex(
+        identifier,
+        'GopipIndex',
+        REQUEST=REQUEST,
+        RESPONSE=RESPONSE,
+        URL1=URL3
+    )

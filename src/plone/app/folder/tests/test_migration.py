@@ -1,19 +1,22 @@
-import re
-
-from Acquisition import aq_base, aq_parent
-from zope.interface import classImplements
-from zope.component import getMultiAdapter
-from zope.publisher.browser import TestRequest
-from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base as BTreeFolder
+# -*- coding: utf-8 -*-
+from Acquisition import aq_base
+from Acquisition import aq_parent
 from Products.ATContentTypes.content.document import ATDocument
-from Products.CMFPlone.utils import _createObjectByType
-from plone.folder.interfaces import IOrderable, IOrdering
-from plone.app.folder.tests.base import IntegrationTestCase
-from plone.app.folder.tests.layer import IntegrationLayer
-from plone.app.folder.tests.content import NonBTreeFolder, create
-from plone.app.folder.tests.content import OrderableFolder
+from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base as BTreeFolder
+from plone.app.folder.tests.content import _createObjectByType
 from plone.app.folder.migration import BTreeMigrationView
+from plone.app.folder.tests.base import IntegrationTestCase
+from plone.app.folder.tests.content import NonBTreeFolder
+from plone.app.folder.tests.content import OrderableFolder
+from plone.app.folder.tests.content import create
+from plone.app.folder.tests.layer import IntegrationLayer
 from plone.app.folder.utils import findObjects
+from plone.folder.interfaces import IOrderable
+from plone.folder.interfaces import IOrdering
+from zope.component import getMultiAdapter
+from zope.interface import classImplements
+from zope.publisher.browser import TestRequest
+import re
 
 
 def reverseMigrate(folder):
@@ -53,9 +56,11 @@ def makeResponse(request):
     """ create a fake request and set up logging of output """
     headers = {}
     output = []
+
     class Response:
         def setHeader(self, header, value):
             headers[header] = value
+
         def write(self, msg):
             output.append(msg.strip())
     request.RESPONSE = Response()
@@ -92,9 +97,13 @@ class TestMigrationHelpers(IntegrationTestCase):
         except AttributeError:
             # BBB In Zope 2.13 this always raises AttributeError
             pass
-        self.assertEqual(btree._objects,
-            (dict(id='doc1', meta_type='ATDocument'),
-            (dict(id='event1', meta_type='ATEvent'))))
+        self.assertEqual(
+            btree._objects,
+            (
+                dict(id='doc1', meta_type='ATDocument'),
+                dict(id='event1', meta_type='ATEvent')
+            )
+        )
         self.assertEqual(btree.getId(), 'folder')
         self.assertEqual(btree.Title(), 'Foo')
 
@@ -108,8 +117,10 @@ class TestMigrationHelpers(IntegrationTestCase):
         self.failUnless(hasattr(foo, '_tree'))
         self.failIf('_tree' in foo.__dict__)
         self.assertEqual(foo._tree, None)
-        self.assertEqual(foo._objects,
-            (dict(id='bar', meta_type='NonBTreeFolder'), ))
+        self.assertEqual(
+            foo._objects,
+            (dict(id='bar', meta_type='NonBTreeFolder'), )
+        )
         bar = aq_base(getattr(foo, 'bar'))
         self.failUnless(isinstance(bar, BTreeFolder))
         self.failIf('_objects' in bar.__dict__)   # no sub-objects

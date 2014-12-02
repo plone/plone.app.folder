@@ -1,10 +1,17 @@
 Changelog
 =========
 
-1.0.7 (unreleased)
+1.1.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Reduced dependencies and declared them explicit.
+  Do not depend on ``Products.CMFPlone`` any more.
+  Pep8fied et al.
+  ATCT is now an extra require.
+  Skip Zope2 old style interfaces.
+  Stop Plone 3 support in 1.1 series (remove bbb+patches).
+  Get rid of old outdated interface fallbacks.
+  [jensens]
 
 
 1.0.6 (2014-01-27)

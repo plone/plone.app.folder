@@ -1,20 +1,17 @@
-try:
-    from App.class_init import InitializeClass
-    InitializeClass     # keep pyflakes happy
-except ImportError:
-    from Globals import InitializeClass
+# -*- coding: utf-8 -*-
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_inner, aq_parent, aq_base
+from Acquisition import aq_base
+from Acquisition import aq_inner
+from Acquisition import aq_parent
 from ComputedAttribute import ComputedAttribute
-from OFS.interfaces import IOrderedContainer as IOrderedContainer
 from OFS.ObjectManager import REPLACEABLE
-from webdav.NullResource import NullResource
-from zope.interface import implements
+from OFS.interfaces import IOrderedContainer as IOrderedContainer
 from Products.Archetypes.atapi import BaseFolder
 from Products.CMFCore.permissions import View
 from plone.folder.ordered import OrderedBTreeFolderBase
-from plone.app.folder.bbb import base_implements
-
+from webdav.NullResource import NullResource
+from zope.interface import implementer
+from App.class_init import InitializeClass
 
 # to keep backward compatibility
 has_btree = 1
@@ -32,11 +29,9 @@ class ReplaceableWrapper:
         return getattr(self.__ob, name)
 
 
+@implementer(IOrderedContainer)
 class BaseBTreeFolder(OrderedBTreeFolderBase, BaseFolder):
     """ a base class for btree-based folders supporting ordering """
-    implements(IOrderedContainer)
-
-    __implements__ = base_implements
 
     security = ClassSecurityInfo()
 
@@ -50,7 +45,7 @@ class BaseBTreeFolder(OrderedBTreeFolderBase, BaseFolder):
 
     def __getitem__(self, key):
         """ Override BTreeFolder __getitem__ """
-        if key in self.Schema().keys() and key[:1] != "_": #XXX 2.2
+        if key in self.Schema().keys() and key[:1] != "_":  # XXX 2.2
             accessor = self.Schema()[key].getAccessor(self)
             if accessor is not None:
                 return accessor()
@@ -59,7 +54,7 @@ class BaseBTreeFolder(OrderedBTreeFolderBase, BaseFolder):
     # override the version from `CMFDynamicViewFTI/browserdefault.py:72`
     __call__ = BaseFolder.__call__.im_func
 
-    security.declareProtected(View, 'index_html')
+    @security.protected(View)
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ Special case index_html """
         if 'index_html' in self:
@@ -67,7 +62,7 @@ class BaseBTreeFolder(OrderedBTreeFolderBase, BaseFolder):
         request = REQUEST
         if request is None:
             request = getattr(self, 'REQUEST', None)
-        if request and request.has_key('REQUEST_METHOD'):
+        if request and 'REQUEST_METHOD' in request:
             if request.maybe_webdav_client:
                 method = request['REQUEST_METHOD']
                 if method == 'PUT':

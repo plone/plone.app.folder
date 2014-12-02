@@ -1,8 +1,9 @@
-from plone.app.layout.nextprevious.interfaces import INextPreviousProvider
+# -*- coding: utf-8 -*-
+from Products.CMFCore.utils import getToolByName
 from plone.app.folder.tests.base import IntegrationTestCase
 from plone.app.folder.tests.layer import IntegrationLayer
+from plone.app.layout.nextprevious.interfaces import INextPreviousProvider
 
-from Products.CMFCore.utils import getToolByName
 
 class NextPreviousSupportTests(IntegrationTestCase):
     """ basic use cases and tests for next/previous navigation, essentially
@@ -107,8 +108,9 @@ class NextPreviousSupportTests(IntegrationTestCase):
         # published objects [subDoc2, subDoc4, subDoc5]
         self.setRoles(("Manager",))
         for id in range(1, 7):
-            doc = container[container.invokeFactory('Document', 'subDoc%d' % id)]
-            if id in [2,4,5]:
+            docid = container.invokeFactory('Document', 'subDoc%d' % id)
+            doc = container[docid]
+            if id in [2, 4, 5]:
                 self.wf.doActionFor(doc, "publish")
 
         # Member should only see the published items
@@ -128,9 +130,10 @@ class NextPreviousSupportTests(IntegrationTestCase):
         # create objects [subDoc1,subDoc2,subDoc3,subDoc4,subDoc5,subDoc6]
         # published objects [subDoc2, subDoc4, subDoc5]
         self.setRoles(("Manager",))
-        for id in range(1, 7):
-            doc = container[container.invokeFactory('Document', 'subDoc%d' % id)]
-            if id in [2,4,5]:
+        for iid in range(1, 7):
+            docid = container.invokeFactory('Document', 'subDoc%d' % iid)
+            doc = container[docid]
+            if iid in [2, 4, 5]:
                 self.wf.doActionFor(doc, "publish")
 
         # Member should only see the published items
@@ -144,6 +147,7 @@ class NextPreviousSupportTests(IntegrationTestCase):
         self.assertEqual(previous['id'], 'subDoc2')
         previous = adapter.getPreviousItem(container.subDoc2)
         self.assertEqual(previous, None)
+
 
 def test_suite():
     from unittest import defaultTestLoader

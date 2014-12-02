@@ -8,7 +8,7 @@
     title="plone.app.folder"
     directory="profiles/default"
     description="Orderable btree-based folders as proposed in PLIP 191."
-    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    for="Products.CMFCore.interfaces.ISiteRoot"
     provides="Products.GenericSetup.interfaces.EXTENSION" />
 
 </configure>

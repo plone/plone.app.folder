@@ -1,9 +1,10 @@
-from unittest import defaultTestLoader
-from zope.interface import classImplements
+# -*- coding: utf-8 -*-
 from Products.ATContentTypes.content.document import ATDocument
-from plone.folder.interfaces import IOrderable
 from plone.app.folder.tests.base import IntegrationTestCase
 from plone.app.folder.tests.layer import PartialOrderingIntegrationLayer
+from plone.folder.interfaces import IOrderable
+from unittest import defaultTestLoader
+from zope.interface import classImplements
 
 
 class PartialOrderingTests(IntegrationTestCase):
@@ -13,7 +14,9 @@ class PartialOrderingTests(IntegrationTestCase):
 
     def afterSetUp(self):
         self.setRoles(['Manager'])
-        self.folder = self.portal[self.portal.invokeFactory('Folder', 'folder')]
+        self.folder = self.portal[
+            self.portal.invokeFactory('Folder', 'folder')
+        ]
         classImplements(ATDocument, IOrderable)
 
     def testGetObjectPositionForNonOrderableContent(self):

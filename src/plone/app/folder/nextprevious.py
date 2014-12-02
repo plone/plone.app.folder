@@ -1,16 +1,17 @@
-from zope.interface import implements
-from zope.component import adapts
+# -*- coding: utf-8 -*-
 from AccessControl import getSecurityManager
-from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.interfaces import IContentish
-from plone.app.layout.nextprevious.interfaces import INextPreviousProvider
+from Products.CMFCore.utils import getToolByName
 from plone.app.folder.folder import IATUnifiedFolder
+from plone.app.layout.nextprevious.interfaces import INextPreviousProvider
+from zope.component import adapter
+from zope.interface import implementer
 
 
+@implementer(INextPreviousProvider)
+@adapter(IATUnifiedFolder)
 class NextPrevious(object):
     """ adapter for acting as a next/previous provider """
-    implements(INextPreviousProvider)
-    adapts(IATUnifiedFolder)
 
     def __init__(self, context):
         self.context = context
@@ -62,5 +63,10 @@ class NextPrevious(object):
         url = obj.absolute_url()
         if ptype in self.vat:       # "use view action in listings"
             url += '/view'
-        return dict(id=obj.getId(), url=url, title=obj.Title(),
-            description=obj.Description(), portal_type=ptype)
+        return dict(
+            id=obj.getId(),
+            url=url,
+            title=obj.Title(),
+            description=obj.Description(),
+            portal_type=ptype
+        )

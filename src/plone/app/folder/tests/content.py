@@ -1,21 +1,22 @@
-from zope.interface import implements
-from zope.event import notify
-from zope.lifecycleevent import ObjectCreatedEvent, ObjectModifiedEvent
+# -*- coding: utf-8 -*-
 from AccessControl import ClassSecurityInfo
 from OFS.interfaces import IOrderedContainer
-from Products.Archetypes.atapi import BaseFolder
 from Products.ATContentTypes.config import PROJECTNAME
-from Products.ATContentTypes.content.base import registerATCT
 from Products.ATContentTypes.content.base import ATCTOrderedFolder
-from Products.ATContentTypes.interface import IATFolder
-from Products.ATContentTypes.permission import permissions
+from Products.ATContentTypes.content.base import registerATCT
 from Products.ATContentTypes.content.schemata import ATContentTypeSchema
 from Products.ATContentTypes.content.schemata import finalizeATCTSchema
+from Products.ATContentTypes.interface import IATFolder
 from Products.ATContentTypes.lib.constraintypes import ConstrainTypesMixinSchema
-from Products.CMFPlone.utils import _createObjectByType
-from plone.folder.interfaces import IOrderable
+from Products.ATContentTypes.permission import permissions
+from Products.Archetypes.atapi import BaseFolder
+from Products.CMFCore.utils import getToolByName
 from plone.app.folder.base import BaseBTreeFolder
-from plone.app.folder.bbb import folder_implements
+from plone.folder.interfaces import IOrderable
+from zope.event import notify
+from zope.interface import implementer
+from zope.lifecycleevent import ObjectCreatedEvent
+from zope.lifecycleevent import ObjectModifiedEvent
 
 
 ATFolderSchema = ATContentTypeSchema.copy() + ConstrainTypesMixinSchema
@@ -29,17 +30,15 @@ class UnorderedFolder(BaseFolder):
         return ''
 
 
+@implementer(IOrderable)
 class OrderableFolder(BaseBTreeFolder):
     """ sample ordered btree-based folder (needing the interface) """
-    implements(IOrderable)
 
 
+@implementer(IATFolder, IOrderedContainer)
 class NonBTreeFolder(ATCTOrderedFolder):
     """ an old-style folder much like `ATFolder` before Plone 4;  this is
         a reduced version of `ATContentTypes.content.folder.ATFolder` """
-    implements(IATFolder, IOrderedContainer)
-
-    __implements__ = folder_implements
 
     schema = ATFolderSchema
     portal_type = 'NonBTreeFolder'
@@ -59,6 +58,30 @@ def addNonBTreeFolder(container, id, **kwargs):
     obj.initializeArchetype(**kwargs)
     notify(ObjectModifiedEvent(obj))
     return obj
+
+
+def _createObjectByType(type_name, container, cid, *args, **kw):
+    """Create an object without performing security checks
+
+    Note
+        copied from ``Products.CMFPlone.utils._createObjectByType`` because
+        this was this import was the only dependency on CMFPlone!
+
+    invokeFactory and fti.constructInstance perform some security checks
+    before creating the object. Use this function instead if you need to
+    skip these checks.
+
+    This method uses
+    CMFCore.TypesTool.FactoryTypeInformation._constructInstance
+    to create the object without security checks.
+    """
+    cid = str(cid)
+    typesTool = getToolByName(container, 'portal_types')
+    fti = typesTool.getTypeInfo(type_name)
+    if not fti:
+        raise ValueError('Invalid type %s' % type_name)
+
+    return fti._constructInstance(container, cid, *args, **kw)
 
 
 def create(ctype, container, id, *args, **kw):

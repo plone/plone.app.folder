@@ -1,9 +1,13 @@
-from logging import getLogger
-from time import clock, strftime
+# -*- coding: utf-8 -*-
 from Acquisition import aq_base
-from Products.Five.browser import BrowserView
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base as BTreeFolder
-from plone.app.folder.utils import findObjects, timer, checkpointIterator
+from Products.Five.browser import BrowserView
+from logging import getLogger
+from plone.app.folder.utils import checkpointIterator
+from plone.app.folder.utils import findObjects
+from plone.app.folder.utils import timer
+from time import clock
+from time import strftime
 from transaction import get
 
 logger = getLogger(__name__)
@@ -17,6 +21,7 @@ class BTreeMigrationView(BrowserView):
     def mklog(self):
         """ helper to prepend a time stamp to the output """
         write = self.request.RESPONSE.write
+
         def log(msg, timestamp=True, cr=True):
             if timestamp:
                 msg = strftime('%Y/%m/%d-%H:%M:%S ') + msg
@@ -59,8 +64,10 @@ class BTreeMigrationView(BrowserView):
         lap = timer()           # real lap time (for intermediate commits)
         cpu = timer(clock)      # cpu time
         processed = 0
+
         def checkPoint():
-            msg = 'intermediate commit (%d objects processed, last batch in %s)...'
+            msg = 'intermediate commit '\
+                  '(%d objects processed, last batch in %s)...'
             log(msg % (processed, lap.next()))
             trx = get()
             trx.note('migrated %d btree-folders' % processed)
