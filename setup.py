@@ -50,7 +50,6 @@ setup(
         ],
         'test': [
             'plone.app.testing',
-            'Products.PloneTestCase',
         ],
     },
 )
