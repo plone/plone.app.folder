@@ -1,4 +1,3 @@
-from unittest import defaultTestLoader
 from plone.app.folder.tests.base import IntegrationTestCase
 from plone.app.folder.tests.content import UnorderedFolder
 from plone.app.folder.tests.layer import IntegrationLayer
@@ -62,6 +61,3 @@ class NoGopipTests(IntegrationTestCase):
         self.assertEqual(ids,
             ['bar5', 'bar7', 'bar6', 'bar2', 'bar1', 'bar3', 'bar4'])
 
-
-def test_suite():
-    return defaultTestLoader.loadTestsFromName(__name__)
