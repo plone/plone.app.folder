@@ -4,7 +4,7 @@
 # to run individual tests using:
 # $ bin/test -s plone.app.folder --tests-pattern=benchmarks -t <testName>
 # where <testName> is something like "testObjectValuesOrdered"
-from Products.PloneTestCase import PloneTestCase as ptc
+from plone.app.testing.bbb import PloneTestCase
 from Testing import ZopeTestCase as ztc
 from plone.app.folder.tests.content import _createObjectByType
 from plone.app.folder.tests.content import create as createNonBTreeFolder
@@ -13,8 +13,6 @@ from plone.batching.batch import QuantumBatch as Batch
 from profilehooks import timecall
 from random import randint
 from transaction import commit
-from unittest import defaultTestLoader
-from unittest import main
 
 # setup plone site
 ptc.setupPloneSite()
@@ -23,7 +21,7 @@ ptc.setupPloneSite()
 SIZE = 500
 
 
-class TestBenchmarkCase(ptc.PloneTestCase):
+class TestBenchmarkCase(PloneTestCase):
 
     class layer(IntegrationLayer):
 
@@ -176,10 +174,3 @@ class TestBenchmarkCase(ptc.PloneTestCase):
     def testRandomOrdered(self):
         for x in range(1000):
             self.ordered['doc.%d' % randint(0, SIZE-1)]
-
-
-def test_suite():
-    return defaultTestLoader.loadTestsFromName(__name__)
-
-if __name__ == '__main__':
-    main(defaultTest='test_suite')

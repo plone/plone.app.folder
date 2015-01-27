@@ -28,7 +28,3 @@ class FolderReplacementTests(IntegrationTestCase):
                 GopipIndex
             )
         )
-
-
-def test_suite():
-    return defaultTestLoader.loadTestsFromName(__name__)

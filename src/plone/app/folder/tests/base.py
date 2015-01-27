@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
-from Products.PloneTestCase import PloneTestCase as ptc
-from Products.Five.testbrowser import Browser
-
-ptc.setupPloneSite()
-
-
-class IntegrationTestCase(ptc.PloneTestCase):
-    """ base class for integration tests """
+from plone.app.testing.bbb import PloneTestCase
+from plone.app.testing import TEST_USER_NAME
+from plone.app.testing import TEST_USER_PASSWORD
+from plone.testing.z2 import Browser
 
 
-class FunctionalTestCase(ptc.FunctionalTestCase):
+class FunctionalTestCase(PloneTestCase):
     """ base class for functional tests """
 
     def getBrowser(self, loggedIn=True):
         """ instantiate and return a testbrowser for convenience """
-        browser = Browser()
+        browser = Browser(self.layer['app'])
         if loggedIn:
-            user = ptc.default_user
-            pwd = ptc.default_password
-            browser.addHeader('Authorization', 'Basic %s:%s' % (user, pwd))
+            browser.addHeader('Authorization', 'Basic %s:%s' % (
+                TEST_USER_NAME, TEST_USER_PASSWORD))
         return browser
+
+IntegrationTestCase = FunctionalTestCase
