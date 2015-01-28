@@ -148,3 +148,7 @@ class NextPreviousSupportTests(IntegrationTestCase):
         previous = adapter.getPreviousItem(container.subDoc2)
         self.assertEqual(previous, None)
 
+
+def test_suite():
+    from unittest import defaultTestLoader
+    return defaultTestLoader.loadTestsFromName(__name__)
