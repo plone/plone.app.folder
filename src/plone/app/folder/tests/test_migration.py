@@ -238,3 +238,7 @@ class TestBTreeMigration(IntegrationTestCase):
         self.failUnless(isSaneBTreeFolder(self.portal.test.foo))
         self.failUnless(isSaneBTreeFolder(self.portal.test.bar))
 
+
+def test_suite():
+    from unittest import defaultTestLoader
+    return defaultTestLoader.loadTestsFromName(__name__)
