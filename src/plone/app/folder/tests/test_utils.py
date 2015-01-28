@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from Testing import ZopeTestCase as ztc
 from plone.app.folder.utils import findObjects
-from unittest import defaultTestLoader, main
 
 
 class UtilsTests(ztc.ZopeTestCase):
@@ -35,10 +34,3 @@ class UtilsTests(ztc.ZopeTestCase):
         self.assertEqual(found[0], ('', self.portal))
         # but the rest should be the same...
         self.assertEqual(self.ids(found[1:]), self.good)
-
-
-def test_suite():
-    return defaultTestLoader.loadTestsFromName(__name__)
-
-if __name__ == '__main__':
-    main(defaultTest='test_suite')
