@@ -3,6 +3,7 @@ from Products.ATContentTypes.content.document import ATDocument
 from plone.app.folder.tests.base import IntegrationTestCase
 from plone.app.folder.tests.layer import PartialOrderingIntegrationLayer
 from plone.folder.interfaces import IOrderable
+from unittest import defaultTestLoader
 from zope.interface import classImplements
 
 
@@ -45,3 +46,7 @@ class PartialOrderingTests(IntegrationTestCase):
         self.assertEqual(self.folder.getObjectPosition('bar'), 1)
         self.folder.invokeFactory('Event', id='party')
         self.assertEqual(self.folder.getObjectPosition('party'), None)
+
+
+def test_suite():
+    return defaultTestLoader.loadTestsFromName(__name__)
