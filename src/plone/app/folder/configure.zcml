@@ -6,7 +6,6 @@
     i18n_domain="plone.app.folder">
 
     <five:registerPackage package="." initialize=".initialize" />
-    <include file="profiles.zcml" />
     <include package="plone.folder" />
 
     <configure zcml:condition="installed Products.ATContentTypes">

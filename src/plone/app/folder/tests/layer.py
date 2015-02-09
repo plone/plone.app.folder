@@ -32,14 +32,6 @@ class IntegrationLayer(PloneSite):
         load_config('testing.zcml', tests)
         metaconfigure.debug_mode = False
         installPackage('plone.app.folder', quiet=True)
-        # import replacement profile
-        profile = 'profile-plone.app.folder:default'
-        tool = getToolByName(portal, 'portal_setup')
-        tool.runAllImportStepsFromProfile(profile, purge_old=False)
-        # make sure it's loaded...
-        types = getToolByName(portal, 'portal_types')
-        assert types.getTypeInfo('Folder').product == 'plone.app.folder'
-        # and commit the changes
         commit()
         close(root)
 
