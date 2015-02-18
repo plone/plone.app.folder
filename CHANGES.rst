@@ -13,6 +13,9 @@ Changelog
   Get rid of old outdated interface fallbacks.
   [jensens]
 
+- Remove profile, since Plone 4+ was no longer used anyway.
+  [gforcada]
+
 
 1.0.6 (2014-01-27)
 ------------------
