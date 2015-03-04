@@ -20,11 +20,7 @@ class IntegrationFixture(PloneSandboxLayer):
         self.loadZCML('testing.zcml', package=tests)
 
     def setUpPloneSite(self, portal):
-        # restore default workflow
-        applyProfile(portal, 'plone.app.folder:default')
-
-        types = getToolByName(portal, 'portal_types')
-        assert types.getTypeInfo('Folder').product == 'plone.app.folder'
+        portal.portal_workflow.setDefaultChain("simple_publication_workflow")
 
 
 PAF_INTEGRATION_FIXTURE = IntegrationFixture()
