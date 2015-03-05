@@ -148,8 +148,6 @@ class TestBTreeMigration(IntegrationTestCase):
     layer = IntegrationLayer
 
     def afterSetUp(self):
-        self.portal._delObject('news')
-        self.portal._delObject('events')
         classImplements(ATDocument, IOrderable)
 
     def makeUnmigratedFolder(self, context, name, **kw):
