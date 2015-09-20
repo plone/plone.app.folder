@@ -4,7 +4,8 @@ Changelog
 1.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Use registry lookup for types_use_view_action_in_listings.
+  [esteele]
 
 
 1.1.0 (2015-03-11)
