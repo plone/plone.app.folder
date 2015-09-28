@@ -94,8 +94,10 @@ class TestMigrationHelpers(IntegrationTestCase):
         try:
             self.assertEqual(list(btree.objectValues()), [])
             self.assertEqual(list(btree.objectIds()), [])
-        except AttributeError:
+        except (AttributeError, TypeError):
             # BBB In Zope 2.13 this always raises AttributeError
+            # (Products.BTreeFolder2 2.13.3 or lower) or TypeError
+            # (Products.BTreeFolder2 2.13.4 or higher).
             pass
         self.assertEqual(
             btree._objects,

@@ -4,6 +4,10 @@ Changelog
 1.1.1 (unreleased)
 ------------------
 
+- Fixed test in combination with Products.BTreeFolder2 2.13.4 and
+  higher.
+  [maurits]
+
 - Use registry lookup for types_use_view_action_in_listings.
   [esteele]
 
