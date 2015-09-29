@@ -89,16 +89,6 @@ class TestMigrationHelpers(IntegrationTestCase):
         self.failUnless(hasattr(btree, '_tree'))
         self.failIf('_tree' in btree.__dict__)
         self.assertEqual(btree._tree, None)
-        # please note that the default adapter returns empty lists here
-        # while the partial one raises `AttributeErrors`
-        try:
-            self.assertEqual(list(btree.objectValues()), [])
-            self.assertEqual(list(btree.objectIds()), [])
-        except (AttributeError, TypeError):
-            # BBB In Zope 2.13 this always raises AttributeError
-            # (Products.BTreeFolder2 2.13.3 or lower) or TypeError
-            # (Products.BTreeFolder2 2.13.4 or higher).
-            pass
         self.assertEqual(
             btree._objects,
             (
