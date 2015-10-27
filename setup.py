@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '1.1.2.dev0'
+version = '1.2.0.dev0'
 
 readme = open('README.rst').read()
 history = open('CHANGES.rst').read()
@@ -13,7 +13,6 @@ setup(
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Plone',
-        'Framework :: Plone :: 4.3',
         'Framework :: Plone :: 5.0',
         'Framework :: Zope2',
         'Intended Audience :: Developers',
@@ -22,7 +21,6 @@ setup(
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
     ],
     keywords='folder btree order plone archetypes atcontenttypes',

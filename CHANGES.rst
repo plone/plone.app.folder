@@ -1,16 +1,13 @@
 Changelog
 =========
 
-1.1.2 (unreleased)
+1.2.0 (unreleased)
 ------------------
-
-New:
-
-- *add item here*
 
 Fixes:
 
-- *add item here*
+- Rerelease 1.1.1 as 1.2.0, because this is for Plone 5.0 and higher.
+  [maurits]
 
 
 1.1.1 (2015-10-27)
