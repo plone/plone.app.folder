@@ -4,13 +4,10 @@ Changelog
 1.1.2 (unreleased)
 ------------------
 
-New:
-
-- *add item here*
-
 Fixes:
 
-- *add item here*
+- Reverted to Plone 4 way of looking up types_use_view_action_in_listings.
+  [maurits]
 
 
 1.1.1 (2015-10-27)

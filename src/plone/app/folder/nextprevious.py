@@ -4,9 +4,7 @@ from Products.CMFCore.interfaces import IContentish
 from Products.CMFCore.utils import getToolByName
 from plone.app.folder.folder import IATUnifiedFolder
 from plone.app.layout.nextprevious.interfaces import INextPreviousProvider
-from plone.registry.interfaces import IRegistry
 from zope.component import adapter
-from zope.component import getUtility
 from zope.interface import implementer
 
 
@@ -17,8 +15,8 @@ class NextPrevious(object):
 
     def __init__(self, context):
         self.context = context
-        registry = getUtility(IRegistry)
-        self.vat = registry.get('plone.types_use_view_action_in_listings', [])
+        props = getToolByName(context, 'portal_properties').site_properties
+        self.vat = props.getProperty('typesUseViewActionInListings', ())
         self.security = getSecurityManager()
         order = context.getOrdering()
         if not isinstance(order, list):
