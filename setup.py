@@ -26,7 +26,7 @@ setup(
     keywords='folder btree order plone archetypes atcontenttypes',
     author='Plone Foundation',
     author_email='plone-developers@lists.sourceforge.net',
-    url='http://pypi.python.org/pypi/plone.app.folder/',
+    url='https://pypi.python.org/pypi/plone.app.folder/',
     license='GPL version 2',
     packages=find_packages('src'),
     package_dir={'': 'src'},
