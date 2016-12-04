@@ -10,8 +10,8 @@ New:
 
 Fixes:
 
-- *add item here*
-
+- Remove unused tests/bbb.py file which is not used by plone.app.folder itself.
+  [gforcada]
 
 1.2.0 (2015-10-27)
 ------------------
