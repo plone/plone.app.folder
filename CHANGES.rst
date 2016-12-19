@@ -4,10 +4,6 @@ Changelog
 1.2.1 (unreleased)
 ------------------
 
-New:
-
-- *add item here*
-
 Fixes:
 
 - Remove unused tests/bbb.py file which is not used by plone.app.folder itself.
