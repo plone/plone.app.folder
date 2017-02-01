@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Support ZODB5
+  [pbauer]
 
 
 1.2.1 (2016-12-19)
