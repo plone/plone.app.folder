@@ -70,7 +70,7 @@ class BTreeMigrationView(BrowserView):
                   '(%d objects processed, last batch in %s)...'
             log(msg % (processed, lap.next()))
             trx = get()
-            trx.note('migrated %d btree-folders' % processed)
+            trx.note(u'migrated %d btree-folders' % processed)
             trx.savepoint()
         cpi = checkpointIterator(checkPoint, batch)
         for path, obj in findObjects(self.context):
