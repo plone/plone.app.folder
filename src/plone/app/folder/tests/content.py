@@ -6,7 +6,7 @@ from Products.ATContentTypes.content.base import ATCTOrderedFolder
 from Products.ATContentTypes.content.base import registerATCT
 from Products.ATContentTypes.content.schemata import ATContentTypeSchema
 from Products.ATContentTypes.content.schemata import finalizeATCTSchema
-from Products.ATContentTypes.interface import IATFolder
+from Products.ATContentTypes.interfaces import IATFolder
 from Products.ATContentTypes.lib.constraintypes import ConstrainTypesMixinSchema
 from Products.ATContentTypes.permission import permissions
 from Products.Archetypes.atapi import BaseFolder

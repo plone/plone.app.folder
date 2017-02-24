@@ -5,8 +5,8 @@ from Products.ATContentTypes.content.base import registerATCT
 from Products.ATContentTypes.content.schemata import ATContentTypeSchema
 from Products.ATContentTypes.content.schemata import NextPreviousAwareSchema
 from Products.ATContentTypes.content.schemata import finalizeATCTSchema
-from Products.ATContentTypes.interface import IATBTreeFolder
-from Products.ATContentTypes.interface import IATFolder
+from Products.ATContentTypes.interfaces import IATBTreeFolder
+from Products.ATContentTypes.interfaces import IATFolder
 from Products.ATContentTypes.lib.constraintypes import ConstrainTypesMixinSchema
 from Products.CMFCore.permissions import View
 from plone.app.folder import packageName
