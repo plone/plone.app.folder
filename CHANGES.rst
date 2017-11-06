@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Fix webdav PUT of index_html to work in Zope 4.
+  [davisagli]
 
 
 1.2.3 (2017-03-27)

@@ -12,12 +12,13 @@ from plone.folder.ordered import OrderedBTreeFolderBase
 from webdav.NullResource import NullResource
 from zope.interface import implementer
 from App.class_init import InitializeClass
+import Acquisition
 
 # to keep backward compatibility
 has_btree = 1
 
 
-class ReplaceableWrapper:
+class ReplaceableWrapper(Acquisition.Implicit):
     """ a wrapper around an object to make it replaceable """
 
     def __init__(self, ob):
@@ -27,6 +28,9 @@ class ReplaceableWrapper:
         if name == '__replaceable__':
             return REPLACEABLE
         return getattr(self.__ob, name)
+
+    def __repr__(self):
+        return repr(aq_base(self.__ob))
 
 
 @implementer(IOrderedContainer)
@@ -74,8 +78,9 @@ class BaseBTreeFolder(OrderedBTreeFolderBase, BaseFolder):
                 else:
                     raise AttributeError('index_html')
         # Acquire from parent
-        target = aq_parent(aq_inner(self)).aq_acquire('index_html')
-        return ReplaceableWrapper(aq_base(target).__of__(self))
+        parent = aq_parent(aq_inner(self))
+        target = parent.aq_acquire('index_html')
+        return ReplaceableWrapper(aq_base(target)).__of__(parent).__of__(self)
 
     index_html = ComputedAttribute(index_html, 1)
 
