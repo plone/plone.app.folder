@@ -71,7 +71,9 @@ class BaseBTreeFolder(OrderedBTreeFolderBase, BaseFolder):
                 method = request['REQUEST_METHOD']
                 if method == 'PUT':
                     # Very likely a WebDAV client trying to create something
-                    return ReplaceableWrapper(NullResource(self, 'index_html'))
+                    nr = NullResource(self, 'index_html')
+                    nr.__replaceable__ = REPLACEABLE
+                    return nr
                 elif method in ('GET', 'HEAD', 'POST'):
                     # Do nothing, let it go and acquire.
                     pass
