@@ -27,10 +27,11 @@ class ReplaceableWrapper(Acquisition.Implicit):
     def __getattr__(self, name):
         if name == '__replaceable__':
             return REPLACEABLE
-        return getattr(self.__ob, name)
+        ob = object.__getattribute__(self, '_ReplaceableWrapper__ob')
+        return getattr(ob, name)
 
     def __repr__(self):
-        return repr(aq_base(self.__ob))
+        return repr(object.__getattribute__(self, '_ReplaceableWrapper__ob'))
 
 
 @implementer(IOrderedContainer)
@@ -82,7 +83,7 @@ class BaseBTreeFolder(OrderedBTreeFolderBase, BaseFolder):
         # Acquire from parent
         parent = aq_parent(aq_inner(self))
         target = parent.aq_acquire('index_html')
-        return ReplaceableWrapper(aq_base(target)).__of__(parent).__of__(self)
+        return ReplaceableWrapper(target).__of__(parent).__of__(self)
 
     index_html = ComputedAttribute(index_html, 1)
 
