@@ -83,7 +83,7 @@ class BaseBTreeFolder(OrderedBTreeFolderBase, BaseFolder):
         # Acquire from parent
         parent = aq_parent(aq_inner(self))
         target = parent.aq_acquire('index_html')
-        return ReplaceableWrapper(target).__of__(parent).__of__(self)
+        return ReplaceableWrapper(target.aq_base).__of__(parent).__of__(self)
 
     index_html = ComputedAttribute(index_html, 1)
 
