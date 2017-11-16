@@ -12,12 +12,13 @@ from plone.folder.ordered import OrderedBTreeFolderBase
 from webdav.NullResource import NullResource
 from zope.interface import implementer
 from App.class_init import InitializeClass
+import Acquisition
 
 # to keep backward compatibility
 has_btree = 1
 
 
-class ReplaceableWrapper:
+class ReplaceableWrapper(Acquisition.Implicit):
     """ a wrapper around an object to make it replaceable """
 
     def __init__(self, ob):
@@ -26,7 +27,12 @@ class ReplaceableWrapper:
     def __getattr__(self, name):
         if name == '__replaceable__':
             return REPLACEABLE
-        return getattr(self.__ob, name)
+        ob = object.__getattribute__(self, '_ReplaceableWrapper__ob')
+        return getattr(ob, name)
+
+    def __repr__(self):
+        return repr(
+            object.__getattribute__(self, '_ReplaceableWrapper__ob').aq_base)
 
 
 @implementer(IOrderedContainer)
@@ -67,15 +73,18 @@ class BaseBTreeFolder(OrderedBTreeFolderBase, BaseFolder):
                 method = request['REQUEST_METHOD']
                 if method == 'PUT':
                     # Very likely a WebDAV client trying to create something
-                    return ReplaceableWrapper(NullResource(self, 'index_html'))
+                    nr = NullResource(self, 'index_html')
+                    nr.__replaceable__ = REPLACEABLE
+                    return nr
                 elif method in ('GET', 'HEAD', 'POST'):
                     # Do nothing, let it go and acquire.
                     pass
                 else:
                     raise AttributeError('index_html')
         # Acquire from parent
-        target = aq_parent(aq_inner(self)).aq_acquire('index_html')
-        return ReplaceableWrapper(aq_base(target).__of__(self))
+        parent = aq_parent(aq_inner(self))
+        target = parent.aq_acquire('index_html')
+        return ReplaceableWrapper(target).__of__(parent).__of__(self)
 
     index_html = ComputedAttribute(index_html, 1)
 
