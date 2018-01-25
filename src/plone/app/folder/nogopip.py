@@ -86,7 +86,7 @@ class GopipIndex(StubIndex):
         pos = {}
         if len(containers) == 1:
             # the usual "all from one folder" case can be optimized
-            folder = containers.values()[0]
+            folder = list(containers.values())[0]
             if getattr(aq_base(folder), 'getOrdering', None):
                 ids = folder.getOrdering().idsInOrder()
             else:

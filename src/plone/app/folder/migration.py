@@ -68,7 +68,7 @@ class BTreeMigrationView(BrowserView):
         def checkPoint():
             msg = 'intermediate commit '\
                   '(%d objects processed, last batch in %s)...'
-            log(msg % (processed, lap.next()))
+            log(msg % (processed, next(lap)))
             trx = get()
             trx.note(u'migrated %d btree-folders' % processed)
             trx.savepoint()
@@ -77,13 +77,13 @@ class BTreeMigrationView(BrowserView):
             if isinstance(obj, BTreeFolder):
                 if self.migrate(obj):
                     processed += 1
-                    cpi.next()
+                    next(cpi)
             self.postprocess(obj)
 
         checkPoint()                # commit last batch
         if dryrun:
             get().abort()           # abort on test-run...
         msg = 'processed %d object(s) in %s (%s cpu time).'
-        msg = msg % (processed, real.next(), cpu.next())
+        msg = msg % (processed, next(real), next(cpu))
         log(msg)
         logger.info(msg)
