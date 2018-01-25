@@ -41,6 +41,7 @@ setup(
         'Zope2',
         'plone.folder',
         'setuptools',
+        'six',
         'plone.app.layout',
     ],
     extras_require={
