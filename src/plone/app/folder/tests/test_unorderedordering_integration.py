@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
-from plone.app.folder.tests.base import IntegrationTestCase
-from plone.app.folder.tests.layer import IntegrationLayer
+from plone.app.folder.testing import PLONE_APP_FOLDER_INTEGRATION_TESTING
+from plone.app.testing import setRoles
+from plone.app.testing import TEST_USER_ID
+
+import unittest
 
 
-class UnorderedOrderingTests(IntegrationTestCase):
+class UnorderedOrderingTests(unittest.TestCase):
     """ tests regarding order-support for folders with unordered ordering """
 
-    layer = IntegrationLayer
+    layer = PLONE_APP_FOLDER_INTEGRATION_TESTING
 
-    def afterSetUp(self):
-        self.setRoles(['Manager'])
+    def setUp(self):
+        self.portal = self.layer['portal']
+        setRoles(self.portal, TEST_USER_ID, ['Manager', ])
 
     def create(self):
         container = self.portal[self.portal.invokeFactory('Folder', 'foo')]

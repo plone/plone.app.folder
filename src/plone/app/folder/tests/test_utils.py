@@ -1,21 +1,29 @@
 # -*- coding: utf-8 -*-
-from Testing import ZopeTestCase as ztc
+# -*- coding: utf-8 -*-
 from plone.app.folder.utils import findObjects
+from plone.app.folder.testing import PLONE_APP_FOLDER_INTEGRATION_TESTING
+from plone.app.testing import setRoles
+from plone.app.testing import TEST_USER_ID
+
+import unittest
 
 
-class UtilsTests(ztc.ZopeTestCase):
+class UtilsTests(unittest.TestCase):
 
-    def afterSetUp(self):
-        self.app.manage_addFolder(id='portal', title='Portal')
-        self.portal = self.app.portal
-        self.portal.manage_addFolder(id='foo', title='Foo')
-        self.portal.foo.manage_addFolder(id='bar', title='Bar')
-        self.portal.foo.bar.manage_addDocument(id='doc1', title='a document')
-        self.portal.foo.bar.manage_addDocument(id='file1', title='a file')
-        self.portal.manage_addFolder(id='bar', title='Bar')
-        self.portal.bar.manage_addFolder(id='foo', title='Foo')
-        self.portal.bar.foo.manage_addDocument(id='doc2', title='a document')
-        self.portal.bar.foo.manage_addDocument(id='file2', title='a file')
+    layer = PLONE_APP_FOLDER_INTEGRATION_TESTING
+
+    def setUp(self):
+        self.portal = self.layer['portal']
+        setRoles(self.portal, TEST_USER_ID, ['Manager', ])
+        self.portal.manage_addFolder(id='root', title='Root')
+        self.portal.root.manage_addFolder(id='foo', title='Foo')
+        self.portal.root.foo.manage_addFolder(id='bar', title='Bar')
+        self.portal.root.foo.bar.manage_addDocument(id='doc1', title='a document')
+        self.portal.root.foo.bar.manage_addDocument(id='file1', title='a file')
+        self.portal.root.manage_addFolder(id='bar', title='Bar')
+        self.portal.root.bar.manage_addFolder(id='foo', title='Foo')
+        self.portal.root.bar.foo.manage_addDocument(id='doc2', title='a document')
+        self.portal.root.bar.foo.manage_addDocument(id='file2', title='a file')
         self.good = (
             'bar', 'bar/foo', 'bar/foo/doc2', 'bar/foo/file2',
             'foo', 'foo/bar', 'foo/bar/doc1', 'foo/bar/file1'
@@ -25,12 +33,12 @@ class UtilsTests(ztc.ZopeTestCase):
         return tuple(sorted([r[0] for r in results]))
 
     def testZopeFindAndApply(self):
-        found = self.app.ZopeFindAndApply(self.portal, search_sub=True)
+        found = self.portal.root.ZopeFindAndApply(self.portal.root, search_sub=True)
         self.assertEqual(self.ids(found), self.good)
 
     def testFindObjects(self):
-        found = list(findObjects(self.portal))
+        found = list(findObjects(self.portal.root))
         # the starting point itself is returned
-        self.assertEqual(found[0], ('', self.portal))
+        self.assertEqual(found[0], ('', self.portal.root))
         # but the rest should be the same...
         self.assertEqual(self.ids(found[1:]), self.good)
