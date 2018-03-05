@@ -1,14 +1,21 @@
+from plone.app.folder.testing import PLONE_APP_FOLDER_AT_INTEGRATION_TESTING
 from plone.app.folder.tests.base import IntegrationTestCase
 from plone.app.folder.tests.content import UnorderedFolder
 from plone.app.folder.tests.layer import IntegrationLayer
+from plone.app.testing import TEST_USER_ID
+from plone.app.testing import setRoles
+
+import unittest
 
 
-class NoGopipTests(IntegrationTestCase):
+class NoGopipTests(unittest.TestCase):
 
-    layer = IntegrationLayer
+    layer = PLONE_APP_FOLDER_AT_INTEGRATION_TESTING
 
-    def afterSetUp(self):
-        self.setRoles(['Manager'])
+    def setUp(self):
+        self.portal = self.layer['portal']
+        setRoles(self.portal, TEST_USER_ID, ['Manager', ])
+
         folder = self.portal[self.portal.invokeFactory('Folder', 'foo')]
         subfolder = folder[folder.invokeFactory('Folder', 'sub')]
         folder.invokeFactory('Document', id='bar2')
@@ -60,4 +67,3 @@ class NoGopipTests(IntegrationTestCase):
         ids = self.query(path='/plone/foo', Type='Page')
         self.assertEqual(ids,
             ['bar5', 'bar7', 'bar6', 'bar2', 'bar1', 'bar3', 'bar4'])
-

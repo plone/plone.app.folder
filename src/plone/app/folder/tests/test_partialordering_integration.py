@@ -1,18 +1,23 @@
 # -*- coding: utf-8 -*-
-from Products.ATContentTypes.content.document import ATDocument
-from plone.app.folder.tests.base import IntegrationTestCase
-from plone.app.folder.tests.layer import PartialOrderingIntegrationLayer
+from plone.app.folder.testing import PLONE_APP_FOLDER_AT_INTEGRATION_TESTING
+from plone.app.testing import setRoles
+from plone.app.testing import TEST_USER_ID
 from plone.folder.interfaces import IOrderable
+from Products.ATContentTypes.content.document import ATDocument
 from zope.interface import classImplements
 
+import unittest
 
-class PartialOrderingTests(IntegrationTestCase):
+
+class PartialOrderingTests(unittest.TestCase):
     """ tests regarding order-support for only items marked orderable """
 
-    layer = PartialOrderingIntegrationLayer
+    layer = PLONE_APP_FOLDER_AT_INTEGRATION_TESTING
 
-    def afterSetUp(self):
-        self.setRoles(['Manager'])
+    def setUp(self):
+        self.portal = self.layer['portal']
+        setRoles(self.portal, TEST_USER_ID, ['Manager', ])
+
         self.folder = self.portal[
             self.portal.invokeFactory('Folder', 'folder')
         ]
@@ -22,23 +27,21 @@ class PartialOrderingTests(IntegrationTestCase):
         oid = self.folder.invokeFactory('Event', id='foo')
         obj = self.folder._getOb(oid)
         # a non-orderable object should return "no position"
-        self.failIf(IOrderable.providedBy(obj), 'orderable events?')
-        self.assertEqual(self.folder.getObjectPosition(oid), None)
+        self.assertFalse(IOrderable.providedBy(obj), 'orderable events?')
+        self.assertIsNone(self.folder.getObjectPosition(oid))
         # a non-existant object should raise an error, though
         self.assertRaises(ValueError, self.folder.getObjectPosition, 'bar')
 
     def testRemoveNonOrderableContent(self):
-        self.setRoles(['Manager'])
         self.folder.invokeFactory('Event', id='foo')
         self.folder.manage_delObjects('foo')
-        self.failIf(self.folder.hasObject('foo'), 'foo?')
+        self.assertFalse(self.folder.hasObject('foo'), 'foo?')
 
     def testCreateOrderableContent(self):
-        self.setRoles(['Manager'])
         # create orderable content
         oid = self.folder.invokeFactory('Document', id='foo')
         self.assertEqual(oid, 'foo')
-        self.failUnless(self.folder.hasObject('foo'), 'foo?')
+        self.assertTrue(self.folder.hasObject('foo'), 'foo?')
         self.assertEqual(self.folder.getObjectPosition(oid), 0)
         # and some more...
         self.folder.invokeFactory('Document', id='bar')
