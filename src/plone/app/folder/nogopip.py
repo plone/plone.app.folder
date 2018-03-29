@@ -69,7 +69,7 @@ class GopipIndex(StubIndex):
         # results themselves.  luckily this is only ever called from
         # `sortResults`, so we can get it form there.  oh, and lurker
         # says this won't work in jython, though! :)
-        rs = currentframe(1).f_locals['rs']
+        rs = currentframe().f_back.f_locals['rs']
         rids = {}
         items = []
         containers = {}
