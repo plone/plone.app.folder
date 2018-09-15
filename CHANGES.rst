@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Fix GopipIndex for py3
+  [pbauer]
 
 
 1.2.5 (2018-02-02)

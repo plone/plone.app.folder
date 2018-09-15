@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from Products.CMFCore.permissions import setDefaultRoles
+from AccessControl.Permission import addPermission
 
 
 packageName = __name__
 
 AddFolder = 'ATContentTypes: Add Folder'
-setDefaultRoles(AddFolder, ('Manager', 'Owner'))
+addPermission(AddFolder, ('Manager', 'Owner'))
 
 
 def initialize(context):
@@ -32,9 +32,9 @@ def initialize(context):
             utils.ContentInit(
                 '%s: %s' % (packageName, atype.portal_type),
                 content_types=(atype,),
-                permission = AddFolder,
-                extra_constructors = (constructor,),
-                fti = (fti,),
+                permission=AddFolder,
+                extra_constructors=(constructor,),
+                fti=(fti,),
             ).initialize(context)
 
     from plone.app.folder import nogopip
