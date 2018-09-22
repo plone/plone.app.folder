@@ -14,6 +14,9 @@ New features:
 
 Bug fixes:
 
+- Fix missing ``dict.has_key`` in Python3
+  [ale-rt]
+
 - Fix GopipIndex for py3
   [pbauer]
 
