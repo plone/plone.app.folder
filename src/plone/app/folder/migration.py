@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 from Acquisition import aq_base
-from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base as BTreeFolder
-from Products.Five.browser import BrowserView
 from logging import getLogger
 from plone.app.folder.utils import checkpointIterator
 from plone.app.folder.utils import findObjects
 from plone.app.folder.utils import timer
+from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base as BTreeFolder
+from Products.Five.browser import BrowserView
 from time import clock
 from time import strftime
 from transaction import get
+
 
 logger = getLogger(__name__)
 
@@ -36,7 +37,10 @@ class BTreeMigrationView(BrowserView):
         folder = aq_base(folder)
         assert isinstance(folder, BTreeFolder)
         assert folder.getId()       # make sure the object is properly loaded
-        has = folder.__dict__.has_key
+
+        def has(key):
+            return key in folder.__dict__
+
         if has('_tree') and not has('_objects'):
             return False            # already migrated...
         folder._initBTrees()        # create _tree, _count, _mt_index
