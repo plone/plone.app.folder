@@ -4,14 +4,6 @@ Changelog
 1.2.6 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Fix missing ``dict.has_key`` in Python3
