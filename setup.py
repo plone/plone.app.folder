@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '1.2.6'
+version = '1.2.7.dev0'
 
 readme = open('README.rst').read()
 history = open('CHANGES.rst').read()
