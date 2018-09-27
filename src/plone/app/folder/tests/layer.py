@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-from Products.CMFCore.utils import getToolByName
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import FunctionalTesting
-from plone.app.testing import applyProfile
-from plone.app.testing.bbb import PTC_FUNCTIONAL_TESTING
+from plone.app.testing.bbb_at import PTC_FUNCTIONAL_TESTING
 
 from plone.folder.partial import PartialOrdering
 
