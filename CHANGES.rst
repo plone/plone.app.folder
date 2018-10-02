@@ -10,7 +10,8 @@ Breaking changes:
 
 New features:
 
-- *add item here*
+- move GopipIndex to `plone.folder`
+  [jmevissen, petschki]
 
 Bug fixes:
 
