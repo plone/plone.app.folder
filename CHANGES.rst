@@ -15,6 +15,9 @@ New features:
 
 Bug fixes:
 
+- fix testisolation problems
+  [petschki]
+  
 - Switch to new TestCase using AT after PloneTestcase is now DX.
   [pbauer]
 
