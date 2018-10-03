@@ -22,7 +22,7 @@ class PartialOrderingTests(IntegrationTestCase):
         oid = self.folder.invokeFactory('Event', id='foo')
         obj = self.folder._getOb(oid)
         # a non-orderable object should return "no position"
-        self.failIf(IOrderable.providedBy(obj), 'orderable events?')
+        self.assertFalse(IOrderable.providedBy(obj), 'orderable events?')
         self.assertEqual(self.folder.getObjectPosition(oid), None)
         # a non-existant object should raise an error, though
         self.assertRaises(ValueError, self.folder.getObjectPosition, 'bar')
@@ -31,14 +31,14 @@ class PartialOrderingTests(IntegrationTestCase):
         self.setRoles(['Manager'])
         self.folder.invokeFactory('Event', id='foo')
         self.folder.manage_delObjects('foo')
-        self.failIf(self.folder.hasObject('foo'), 'foo?')
+        self.assertFalse(self.folder.hasObject('foo'), 'foo?')
 
     def testCreateOrderableContent(self):
         self.setRoles(['Manager'])
         # create orderable content
         oid = self.folder.invokeFactory('Document', id='foo')
         self.assertEqual(oid, 'foo')
-        self.failUnless(self.folder.hasObject('foo'), 'foo?')
+        self.assertTrue(self.folder.hasObject('foo'), 'foo?')
         self.assertEqual(self.folder.getObjectPosition(oid), 0)
         # and some more...
         self.folder.invokeFactory('Document', id='bar')

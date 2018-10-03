@@ -16,7 +16,9 @@ from plone.folder.interfaces import IOrdering
 from zope.component import getMultiAdapter
 from zope.interface import classImplements
 from zope.publisher.browser import TestRequest
+
 import re
+import transaction
 
 
 def reverseMigrate(folder):
@@ -84,10 +86,10 @@ class TestMigrationHelpers(IntegrationTestCase):
         create('Event', folder, 'event1')
         reverseMigrate(folder)
         btree = aq_base(self.portal.folder)
-        self.failUnless(isinstance(btree, BTreeFolder))
-        self.failUnless('_objects' in btree.__dict__)
-        self.failUnless(hasattr(btree, '_tree'))
-        self.failIf('_tree' in btree.__dict__)
+        self.assertTrue(isinstance(btree, BTreeFolder))
+        self.assertTrue('_objects' in btree.__dict__)
+        self.assertTrue(hasattr(btree, '_tree'))
+        self.assertFalse('_tree' in btree.__dict__)
         self.assertEqual(btree._tree, None)
         self.assertEqual(
             btree._objects,
@@ -104,33 +106,33 @@ class TestMigrationHelpers(IntegrationTestCase):
         create('Folder', folder, 'bar')
         reverseMigrate(folder)
         foo = aq_base(self.portal.foo)
-        self.failUnless(isinstance(foo, BTreeFolder))
-        self.failUnless('_objects' in foo.__dict__)
-        self.failUnless(hasattr(foo, '_tree'))
-        self.failIf('_tree' in foo.__dict__)
+        self.assertTrue(isinstance(foo, BTreeFolder))
+        self.assertTrue('_objects' in foo.__dict__)
+        self.assertTrue(hasattr(foo, '_tree'))
+        self.assertFalse('_tree' in foo.__dict__)
         self.assertEqual(foo._tree, None)
         self.assertEqual(
             foo._objects,
             (dict(id='bar', meta_type='NonBTreeFolder'), )
         )
         bar = aq_base(getattr(foo, 'bar'))
-        self.failUnless(isinstance(bar, BTreeFolder))
-        self.failIf('_objects' in bar.__dict__)   # no sub-objects
+        self.assertTrue(isinstance(bar, BTreeFolder))
+        self.assertFalse('_objects' in bar.__dict__)   # no sub-objects
         self.assertEqual(bar._objects, ())
-        self.failUnless(hasattr(bar, '_tree'))
-        self.failIf('_tree' in bar.__dict__)
+        self.assertTrue(hasattr(bar, '_tree'))
+        self.assertFalse('_tree' in bar.__dict__)
         self.assertEqual(bar._tree, None)
         self.assertEqual(bar._objects, ())
 
     def testIsSaneBTreeFolder(self):
         # positive case
         _createObjectByType('Folder', self.portal, 'btree')
-        self.failUnless(isSaneBTreeFolder(self.portal.btree))
+        self.assertTrue(isSaneBTreeFolder(self.portal.btree))
         # negative case
         create('Folder', self.portal, 'folder')
-        self.failIf(isSaneBTreeFolder(self.portal.folder))
+        self.assertFalse(isSaneBTreeFolder(self.portal.folder))
         reverseMigrate(self.portal.folder)
-        self.failIf(isSaneBTreeFolder(self.portal.folder))
+        self.assertFalse(isSaneBTreeFolder(self.portal.folder))
 
 
 class TestBTreeMigration(IntegrationTestCase):
@@ -141,32 +143,37 @@ class TestBTreeMigration(IntegrationTestCase):
 
     def afterSetUp(self):
         classImplements(ATDocument, IOrderable)
+        # have to delete previously created content manually
+        # because of test isolation problems
+        if 'test' in self.portal:
+            del self.portal['test']
+            transaction.commit()
 
     def makeUnmigratedFolder(self, context, name, **kw):
         """ create a folder in an unmigrated state """
         folder = create('Folder', context, name, **kw)
         reverseMigrate(folder)
-        self.failIf(isSaneBTreeFolder(folder))
+        self.assertFalse(isSaneBTreeFolder(folder))
         return context[name]
 
     def testBTreeMigration(self):
         # create (unmigrated) btree folder
         folder = self.makeUnmigratedFolder(self.portal, 'test', title='Foo')
         view = BTreeMigrationView(self.portal, self.app.REQUEST)
-        self.failUnless(view.migrate(folder))
+        self.assertTrue(view.migrate(folder))
         folder = self.portal.test       # get the object again...
-        self.failUnless(isSaneBTreeFolder(folder))
+        self.assertTrue(isSaneBTreeFolder(folder))
         self.assertEqual(folder.getId(), 'test')
         self.assertEqual(folder.Title(), 'Foo')
         # a second migration should be skipped
-        self.failIf(view.migrate(folder))
+        self.assertFalse(view.migrate(folder))
 
     def getNumber(self, output):
-        self.failUnless(len(output) >= 3)
-        self.failUnless('migrating btree-based folders' in output[0])
-        self.failUnless('intermediate commit' in output[-2])
+        self.assertTrue(len(output) >= 3)
+        self.assertTrue('migrating btree-based folders' in output[0])
+        self.assertTrue('intermediate commit' in output[-2])
         last = output[-1]
-        self.failUnless('processed' in last)
+        self.assertTrue('processed' in last)
         matches = re.match(r'.*processed (.*) object.*', last).groups()
         return int(matches[0])
 
@@ -177,7 +184,7 @@ class TestBTreeMigration(IntegrationTestCase):
         num = self.getNumber(output)
         self.assertEqual(num, 1)
         folder = self.portal.test               # get the object again...
-        self.failUnless(isSaneBTreeFolder(folder))
+        self.assertTrue(isSaneBTreeFolder(folder))
         self.assertEqual(folder.getId(), 'test')
         self.assertEqual(folder.Title(), 'Foo')
 
@@ -188,14 +195,14 @@ class TestBTreeMigration(IntegrationTestCase):
         create('Event', folder, 'event1')
         reverseMigrate(folder)
         folder = self.portal.test               # get the object again...
-        self.failIf(isSaneBTreeFolder(folder))
+        self.assertFalse(isSaneBTreeFolder(folder))
         # now test its migration...
         view, headers, output, request = getView(self.portal, 'migrate-btrees')
         view()      # call the view, triggering the migration
         num = self.getNumber(output)
         self.assertEqual(num, 1)
         folder = self.portal.test               # get the object again...
-        self.failUnless(isSaneBTreeFolder(folder))
+        self.assertTrue(isSaneBTreeFolder(folder))
         self.assertEqual(folder.getId(), 'test')
         self.assertEqual(folder.Title(), 'Foo')
         self.assertEqual(len(folder.objectValues()), 2)
@@ -209,8 +216,8 @@ class TestBTreeMigration(IntegrationTestCase):
         view()      # call the view, triggering the migration
         num = self.getNumber(output)
         self.assertEqual(num, 2)
-        self.failUnless(isSaneBTreeFolder(self.portal.folder1))
-        self.failUnless(isSaneBTreeFolder(self.portal.folder2))
+        self.assertTrue(isSaneBTreeFolder(self.portal.folder1))
+        self.assertTrue(isSaneBTreeFolder(self.portal.folder2))
 
     def testMigrationViewForNestedFolders(self):
         # nested folders have to be "unmigrated" in bottom-up...
@@ -218,13 +225,13 @@ class TestBTreeMigration(IntegrationTestCase):
         create('Folder', self.portal.test, 'foo')
         create('Folder', self.portal.test, 'bar')
         reverseMigrate(folder)
-        self.failIf(isSaneBTreeFolder(folder))
+        self.assertFalse(isSaneBTreeFolder(folder))
         # start the migration
         view, headers, output, request = getView(self.portal, 'migrate-btrees')
         view()      # call the view, triggering the migration
         num = self.getNumber(output)
         self.assertEqual(num, 3)
-        self.failUnless(isSaneBTreeFolder(self.portal.test))
-        self.failUnless(isSaneBTreeFolder(self.portal.test.foo))
-        self.failUnless(isSaneBTreeFolder(self.portal.test.bar))
+        self.assertTrue(isSaneBTreeFolder(self.portal.test))
+        self.assertTrue(isSaneBTreeFolder(self.portal.test.foo))
+        self.assertTrue(isSaneBTreeFolder(self.portal.test.bar))
 
