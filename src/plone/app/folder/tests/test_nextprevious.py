@@ -36,33 +36,33 @@ class NextPreviousSupportTests(IntegrationTestCase):
 
     def testIfFolderImplementsPreviousNext(self):
         self.folder.invokeFactory('Folder', 'case')
-        self.failUnless(INextPreviousProvider(self.folder.case, None))
+        self.assertTrue(INextPreviousProvider(self.folder.case, None))
 
     def testNextPreviousEnablingOnCreation(self):
         self.folder.invokeFactory('Folder', 'case')
         # first ensure the field on the atfolder is there
-        self.failIf(self.folder.case.getNextPreviousEnabled())
+        self.assertFalse(self.folder.case.getNextPreviousEnabled())
         # then check if the adapter provides the attribute
-        self.failIf(INextPreviousProvider(self.folder.case).enabled)
+        self.assertFalse(INextPreviousProvider(self.folder.case).enabled)
 
     def testNextPreviousViewDisabled(self):
         doc = self.portal.folder1.doc11
         view = doc.restrictedTraverse('@@plone_nextprevious_view')
-        self.failIf(view is None)
-        self.failIf(view.enabled())
+        self.assertFalse(view is None)
+        self.assertFalse(view.enabled())
 
     def testNextPreviousViewEnabled(self):
         self.portal.folder1.setNextPreviousEnabled(True)
         doc = self.portal.folder1.doc11
         view = doc.restrictedTraverse('@@plone_nextprevious_view')
-        self.failIf(view is None)
-        self.failUnless(view.enabled())
+        self.assertFalse(view is None)
+        self.assertTrue(view.enabled())
 
     def testAdapterOnPortal(self):
         doc = self.portal.doc1
         view = doc.restrictedTraverse('@@plone_nextprevious_view')
-        self.failUnless(view)
-        self.failIf(view.enabled())
+        self.assertTrue(view)
+        self.assertFalse(view.enabled())
         self.assertEqual(None, view.next())
         self.assertEqual(None, view.previous())
 
