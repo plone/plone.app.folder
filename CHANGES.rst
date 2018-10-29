@@ -17,10 +17,13 @@ Bug fixes:
 
 - fix testisolation problems
   [petschki]
-  
+
 - Switch to new TestCase using AT after PloneTestcase is now DX.
   [pbauer]
 
+- Restore orignal __repr__ by adding OFS.SimpleItem.PathReprProvider as a baseclass to ATFolder
+  See https://github.com/plone/Products.CMFPlone/issues/2590
+  [pbauer]
 
 1.2.6 (2018-09-23)
 ------------------

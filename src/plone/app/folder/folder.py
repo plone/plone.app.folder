@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from AccessControl import ClassSecurityInfo
+from OFS.SimpleItem import PathReprProvider
 from Products.ATContentTypes.content.base import ATCTFolderMixin
 from Products.ATContentTypes.content.base import registerATCT
 from Products.ATContentTypes.content.schemata import ATContentTypeSchema
@@ -24,7 +25,7 @@ class IATUnifiedFolder(IATFolder):
 
 
 @implementer(IATUnifiedFolder, IATBTreeFolder)
-class ATFolder(ATCTFolderMixin, BaseBTreeFolder):
+class ATFolder(PathReprProvider, ATCTFolderMixin, BaseBTreeFolder):
     """ a folder suitable for holding a very large number of items """
 
     schema = ATFolderSchema
