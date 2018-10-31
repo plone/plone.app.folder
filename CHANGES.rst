@@ -4,10 +4,6 @@ Changelog
 1.3.0 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
 New features:
 
 - move GopipIndex to `plone.folder`
