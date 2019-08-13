@@ -10,7 +10,10 @@ New:
 
 Fixes:
 
-- *add item here*
+- Fixes slow lookup of documentToKeyMap in GopipIndex.
+  About 66x speedup.
+  This may add up to seconds less on large navtree renderings.
+  [jensens]
 
 
 1.1.2 (2015-10-27)
