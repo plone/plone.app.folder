@@ -12,6 +12,24 @@ from zope.interface import implementer
 logger = getLogger(__name__)
 
 
+def traverse(base, path):
+    """simplified fast unrestricted traverse.
+
+    base: the root to start from
+    path: absolute path from app root as string
+    returns: content at the end or None
+    """
+    current = base
+    for cid in path.split('/'):
+        if not cid:
+            continue
+        try:
+            current = current[cid]
+        except KeyError:
+            return None
+    return current
+
+
 @implementer(IPluggableIndex)
 class StubIndex(SimpleItem):
     """ stub catalog index doing nothing """
@@ -74,13 +92,13 @@ class GopipIndex(StubIndex):
         items = []
         containers = {}
         getpath = self.catalog.paths.get
-        traverse = getUtility(ISiteRoot).unrestrictedTraverse
+        root = getUtility(ISiteRoot).getPhysicalRoot()
         for rid in rs:
             path = getpath(rid)
             parent, id = path.rsplit('/', 1)
             container = containers.get(parent)
             if container is None:
-                containers[parent] = container = traverse(parent)
+                containers[parent] = container = traverse(root, parent)
             rids[id] = rid              # remember in case of single folder
             items.append((rid, container, id))  # or else for deferred lookup
         pos = {}
