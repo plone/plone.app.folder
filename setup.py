@@ -11,6 +11,7 @@ setup(
     description='Integration package for `plone.folder` into Plone',
     long_description=readme[readme.find('\n\n'):] + '\n' + history,
     classifiers=[
+        'Development Status :: 6 - Mature',
         'Environment :: Web Environment',
         'Framework :: Plone',
         'Framework :: Plone :: 4.3',
@@ -27,7 +28,7 @@ setup(
     keywords='folder btree order plone archetypes atcontenttypes',
     author='Plone Foundation',
     author_email='plone-developers@lists.sourceforge.net',
-    url='http://pypi.python.org/pypi/plone.app.folder/',
+    url='https://github.com/plone/plone.app.folder',
     license='GPL version 2',
     packages=find_packages('src'),
     package_dir={'': 'src'},
