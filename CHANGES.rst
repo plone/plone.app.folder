@@ -4,10 +4,6 @@ Changelog
 1.1.3 (unreleased)
 ------------------
 
-New:
-
-- *add item here*
-
 Fixes:
 
 - Fixes slow lookup of documentToKeyMap in GopipIndex.
