@@ -11,6 +11,7 @@ setup(
     description='Integration package for `plone.folder` into Plone',
     long_description=readme[readme.find('\n\n'):] + '\n' + history,
     classifiers=[
+        'Development Status :: 6 - Mature',
         'Environment :: Web Environment',
         'Framework :: Plone',
         'Framework :: Plone :: 5.0',
