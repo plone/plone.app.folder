@@ -1,7 +1,6 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:five="http://namespaces.zope.org/five"
-    xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="plone.app.folder">
 
@@ -16,12 +15,5 @@
       <adapter factory=".nextprevious.NextPrevious" />
 
     </configure>
-
-    <browser:page
-        for="*"
-        name="migrate-btrees"
-        class=".migration.BTreeMigrationView"
-        permission="cmf.ManagePortal"
-        />
 
 </configure>
