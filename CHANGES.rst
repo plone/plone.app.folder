@@ -8,6 +8,18 @@ Changelog
 
 .. towncrier release notes start
 
+1.3.2 (2020-10-12)
+------------------
+
+Bug fixes:
+
+
+- Removed ancient migration code for upgrading BTree folder from Plone 3 to 4.
+  The code, or at least the tests, are incompatible with the latest ``zope.interface``.
+  Current plone.app.folder is only for Plone 5.2, so the code is not needed.
+  [maurits] (#24)
+
+
 1.3.1 (2020-04-20)
 ------------------
 

@@ -1,4 +1,0 @@
-Removed ancient migration code for upgrading BTree folder from Plone 3 to 4.
-The code, or at least the tests, are incompatible with the latest ``zope.interface``.
-Current plone.app.folder is only for Plone 5.2, so the code is not needed.
-[maurits]
